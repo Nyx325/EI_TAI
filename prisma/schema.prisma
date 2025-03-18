@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Cliente {
+  id              Int      @id @default(autoincrement())
+  nombres         String   @db.VarChar(40)
+  apellidoP       String   @map("apellido_p") @db.VarChar(20)
+  apellidoM       String?  @map("apellido_m") @db.VarChar(20)
+  fechaNacimiento DateTime @map("fecha_nacimiento") @db.Date
+  fechaCreacion   DateTime @default(now()) @map("fecha_creacion") @db.Date
+
+  tarjetas Tarjeta[]
+  reservas Reserva[]
+}
+
+model Tarjeta {
+  id            Int    @id @default(autoincrement())
+  numeroTarjeta String @map("numero_tarjeta") @db.VarChar(50)
+  clienteId     Int?   @map("cliente_id")
+
+  Cliente Cliente? @relation(fields: [clienteId], references: [id])
+}
+
+model Alojamiento {
+  id                Int     @id @default(autoincrement())
+  banios            Int     @default(0)
+  alberca           Boolean @default(false)
+  cocina            Boolean @default(false)
+  wifi              Boolean @default(false)
+  television        Boolean @default(false)
+  aireAcondicionado Boolean @default(false) @map("aire_acondicionado")
+  precioPorNoche    Decimal @map("precio_por_noche") @db.Decimal(10, 2)
+
+  imagenes Imagen[]
+  reservas Reserva[]
+}
+
+model Imagen {
+  id            Int  @id @default(autoincrement())
+  alojamientoId Int? @map("alojamiento_id")
+
+  Alojamiento Alojamiento? @relation(fields: [alojamientoId], references: [id])
+}
+
+model Reserva {
+  id            Int      @id @default(autoincrement())
+  inicio        DateTime @default(now()) @db.Date
+  fin           DateTime @db.Date
+  total         Decimal  @db.Decimal(10, 2)
+  clienteId     Int?     @map("cliente_id")
+  alojamientoId Int?     @map("alojamiento_id")
+
+  Cliente     Cliente?     @relation(fields: [clienteId], references: [id])
+  Alojamiento Alojamiento? @relation(fields: [alojamientoId], references: [id])
+}
