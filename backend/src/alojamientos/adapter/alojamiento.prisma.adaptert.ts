@@ -2,48 +2,42 @@ import { Decimal } from "@prisma/client/runtime/library";
 import { Alojamiento as PrismaAlojamiento } from "@prisma/client";
 import Alojamiento from "../domain/entities/alojamiento.js";
 
+/**
+ * Función que convierte una instancia del tipo creado
+ * por Prisma para Alojamiento a nuestra interfaz local
+ * de Alojamiento
+ *
+ * @param prismaAlojamiento La instancia del tipo creado
+ * por prisma
+ */
 export function convertPrismaToAlojamiento(
   prismaAlojamiento: PrismaAlojamiento,
 ): Alojamiento {
+  const { precioPorNoche, latitud, longitud, ...restAlojamiento } =
+    prismaAlojamiento;
+
   return {
-    id: prismaAlojamiento.id,
-    descripcion: prismaAlojamiento.descripcion,
-    banios: prismaAlojamiento.banios,
-    alberca: prismaAlojamiento.alberca,
-    cocina: prismaAlojamiento.cocina,
-    wifi: prismaAlojamiento.wifi,
-    television: prismaAlojamiento.television,
-    aireAcondicionado: prismaAlojamiento.aireAcondicionado,
-    precioPorNoche: prismaAlojamiento.precioPorNoche.toNumber(),
-    direccion: prismaAlojamiento.direccion,
-    ciudad: prismaAlojamiento.ciudad,
-    estado: prismaAlojamiento.estado,
-    pais: prismaAlojamiento.pais,
-    codigoPostal: prismaAlojamiento.codigoPostal,
-    latitud: prismaAlojamiento.latitud.toNumber(),
-    longitud: prismaAlojamiento.longitud.toNumber(),
+    ...restAlojamiento,
+    precioPorNoche: precioPorNoche.toNumber(),
+    latitud: latitud.toNumber(),
+    longitud: longitud.toNumber(),
   };
 }
 
-// Esta función toma un objeto de dominio y lo transforma al formato que espera Prisma.
-export function convertAlojamientoToPrisma(data: Alojamiento) {
+/**
+ * Función que convierte una instancia de nuestra interfaz
+ * Alojamiento al tipo creado por Prisma
+ *
+ * @param data Instancia de nuestra interfaz
+ */
+export function convertAlojamientoToPrisma(
+  data: Alojamiento,
+): PrismaAlojamiento {
+  const { precioPorNoche, latitud, longitud, ...restAlojamiento } = data;
   return {
-    // El campo id se utiliza normalmente en el where, por lo que lo omitimos en create.
-    descripcion: data.descripcion,
-    banios: data.banios,
-    alberca: data.alberca,
-    cocina: data.cocina,
-    wifi: data.wifi,
-    television: data.television,
-    aireAcondicionado: data.aireAcondicionado,
-    // Convertimos los números a Decimal
-    precioPorNoche: new Decimal(data.precioPorNoche),
-    direccion: data.direccion,
-    ciudad: data.ciudad,
-    estado: data.estado,
-    pais: data.pais,
-    codigoPostal: data.codigoPostal,
-    latitud: new Decimal(data.latitud),
-    longitud: new Decimal(data.longitud),
+    ...restAlojamiento,
+    precioPorNoche: new Decimal(precioPorNoche),
+    latitud: new Decimal(latitud),
+    longitud: new Decimal(longitud),
   };
 }
