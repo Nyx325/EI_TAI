@@ -35,6 +35,7 @@ model Tarjeta {
 
 model Alojamiento {
   id                Int     @id @default(autoincrement())
+  descripcion       String  @db.Text
   banios            Int     @default(0)
   alberca           Boolean @default(false)
   cocina            Boolean @default(false)
@@ -42,6 +43,13 @@ model Alojamiento {
   television        Boolean @default(false)
   aireAcondicionado Boolean @default(false) @map("aire_acondicionado")
   precioPorNoche    Decimal @map("precio_por_noche") @db.Decimal(10, 2)
+  direccion         String  @db.VarChar(255)
+  ciudad            String  @db.VarChar(100)
+  estado            String  @db.VarChar(100)
+  pais              String  @db.VarChar(100)
+  codigoPostal      String  @map("codigo_postal") @db.VarChar(20)
+  latitud           Decimal @db.Decimal(9, 6)
+  longitud          Decimal @db.Decimal(9, 6)
 
   imagenes Imagen[]
   reservas Reserva[]
