@@ -1,7 +1,7 @@
 import { SearchableString } from "../../../common/domain/value_objects/string.criteria.js";
 
 export default interface AlojamientoCriteria {
-  descripcion?: number;
+  descripcion?: SearchableString;
   banios?: number;
   alberca?: boolean;
   cocina?: boolean;

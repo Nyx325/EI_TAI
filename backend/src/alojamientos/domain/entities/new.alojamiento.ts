@@ -1,5 +1,5 @@
-export default interface Alojamiento {
-  descripcion: number;
+export default interface NewAlojamiento {
+  descripcion: string;
   banios: number;
   alberca: boolean;
   cocina: boolean;

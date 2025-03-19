@@ -1,6 +1,6 @@
 export default interface Alojamiento {
   id: number;
-  descripcion: number;
+  descripcion: string;
   banios: number;
   alberca: boolean;
   cocina: boolean;

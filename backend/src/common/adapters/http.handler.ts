@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import Controller from "../../application/controller.js";
-import JsonErrorResponse from "../../domain/exceptions/respuesta.json.error.js";
-import { intService } from "../../domain/services/int.service.js";
+import Controller from "../application/controller.js";
+import JsonErrorResponse from "../domain/exceptions/respuesta.json.error.js";
+import { intService } from "../domain/services/int.service.js";
 
-export default class Handler<M, NM, I, C> {
+export default class HttpHandler<M, NM, I, C> {
   private ctrl: Controller<M, NM, I, C>;
   private addEvent?: (req: Request) => NM;
   private updateEvent?: (req: Request) => M;
