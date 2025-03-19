@@ -1,9 +1,9 @@
-import Servicio from "./servicio.js";
+import Service from "./service.js";
 
 const regex =
   /^(?!.*\s\s)[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:[ -][A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*$/i;
 
-export const nombreObligatorioServicio: Servicio<string> = {
+export const nameService: Service<string> = {
   isValid(value) {
     if (!value || value.trim() === "" || !regex.test(value.trim())) {
       return {
@@ -23,7 +23,7 @@ export const nombreObligatorioServicio: Servicio<string> = {
   },
 };
 
-export const nombreOpcionalServicio: Servicio<string> = {
+export const optionalNameService: Service<string> = {
   isValid(value) {
     if (!value) {
       return { valid: true };

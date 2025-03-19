@@ -1,4 +1,4 @@
-import Busqueda from "../modelo/value_objects/busqueda.js";
+import Search from "../domain/value_objects/search.js";
 
 /**
  * Interfaz que define las operaciones básicas para la gestión de objetos.
@@ -8,22 +8,22 @@ import Busqueda from "../modelo/value_objects/busqueda.js";
  * @template I Tipo del identificador único del objeto.
  * @template C Tipo que define el criterio de búsqueda.
  */
-export default interface Controlador<M, NM, I, C> {
+export default interface Controller<M, NM, I, C> {
   /**
    * Agrega un nuevo objeto.
    *
-   * @param datoNuevo Datos del nuevo objeto de tipo NM.
+   * @param newData Datos del nuevo objeto de tipo NM.
    * @returns Una promesa que se resuelve con el objeto completo de tipo M.
    */
-  agregar(datoNuevo: NM): Promise<M>;
+  add(newData: NM): Promise<M>;
 
   /**
    * Actualiza un objeto existente.
    *
-   * @param dato Objeto de tipo M que contiene la información a actualizar.
+   * @param data Objeto de tipo M que contiene la información a actualizar.
    * @returns Una promesa que se resuelve con el objeto actualizado de tipo M.
    */
-  actualizar(dato: M): Promise<M>;
+  update(data: M): Promise<M>;
 
   /**
    * Elimina un objeto según su identificador.
@@ -31,7 +31,7 @@ export default interface Controlador<M, NM, I, C> {
    * @param id Identificador único del objeto a eliminar.
    * @returns Una promesa que se resuelve con el objeto eliminado de tipo M.
    */
-  eliminar(id: I): Promise<M>;
+  delete(id: I): Promise<M>;
 
   /**
    * Obtiene un objeto por su identificador.
@@ -39,14 +39,14 @@ export default interface Controlador<M, NM, I, C> {
    * @param id Identificador único del objeto a obtener.
    * @returns Una promesa que se resuelve con el objeto de tipo M, o null/undefined si no se encuentra.
    */
-  obtener(id: I): Promise<M | null | undefined>;
+  get(id: I): Promise<M | null | undefined>;
 
   /**
    * Realiza una búsqueda paginada de objetos que cumplen con el criterio especificado.
    *
-   * @param criterio Objeto que define el criterio de búsqueda de tipo C.
-   * @param pagina Número de página para la paginación.
-   * @returns Una promesa que se resuelve con una instancia de Busqueda que contiene los objetos encontrados y los criterios utilizados.
+   * @param criteria Objeto que define el criterio de búsqueda de tipo C.
+   * @param page Número de página para la paginación.
+   * @returns Una promesa que se resuelve con una instancia de Search que contiene los objetos encontrados y los criterios utilizados.
    */
-  buscar(criterio: C, pagina: number): Promise<Busqueda<M, C>>;
+  getBy(criteria: C, page: number): Promise<Search<M, C>>;
 }

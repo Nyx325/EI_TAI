@@ -1,4 +1,4 @@
-import Servicio from "./servicio.js";
+import Service from "./service.js";
 
 /** Esta expresión se asegura de que la cadena solo contenga
  * dígitos y que el primer dígito sea distinto de 0, lo que
@@ -6,7 +6,7 @@ import Servicio from "./servicio.js";
  */
 const regex = /^[1-9]\d*$/;
 
-export const enteroObligatorioServicio: Servicio<number> = {
+export const intService: Service<number> = {
   isValid(value) {
     if (!value || !regex.test(`${value}`)) {
       return {
@@ -19,7 +19,7 @@ export const enteroObligatorioServicio: Servicio<number> = {
   },
 };
 
-export const enteroOpcionalServicio: Servicio<number> = {
+export const optionalIntService: Service<number> = {
   isValid(value) {
     if (!value) {
       return { valid: true };

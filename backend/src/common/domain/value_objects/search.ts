@@ -7,18 +7,18 @@
  * @template M - Tipo del modelo que se está
  * buscando.
  */
-export default interface Busqueda<M, C> {
+export default interface Search<M, C> {
   /**
    * Cantidad total de páginas disponibles en
    * los resultados de la búsqueda.
    */
-  paginasTotales: number;
+  totalPages: number;
 
   /**
    * Número de la página actual en los
    * resultados.
    */
-  paginaActual: number;
+  currentPage: number;
 
   /**
    * Criterios de búsqueda utilizados para
@@ -28,7 +28,7 @@ export default interface Busqueda<M, C> {
    * parámetros usados para la búsqueda, permitiendo
    * identificar los filtros aplicados.
    */
-  criterio: C;
+  criteria: C;
 
   /**
    * Lista de resultados obtenidos de la búsqueda.
@@ -37,5 +37,5 @@ export default interface Busqueda<M, C> {
    * del tipo `M`. Si no hay resultados,
    * el arreglo estará vacío.
    */
-  resultados: M[];
+  result: M[];
 }
