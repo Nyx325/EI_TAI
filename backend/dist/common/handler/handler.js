@@ -54,7 +54,7 @@ export default class Handler {
             const nuevo = this.eventoActualizar(req);
             const actualizado = await this.controlador.actualizar(nuevo);
             res
-                .status(201)
+                .status(200)
                 .json({ mensaje: "Registro actualizado correctamente", actualizado });
         }
         catch (e) {
@@ -69,7 +69,7 @@ export default class Handler {
             const id = this.obtenerId(req);
             const eliminado = await this.controlador.eliminar(id);
             res
-                .status(201)
+                .status(200)
                 .json({ mensaje: "Registro eliminado correctamente", eliminado });
         }
         catch (e) {

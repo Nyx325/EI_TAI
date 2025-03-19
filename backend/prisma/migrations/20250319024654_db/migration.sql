@@ -4,8 +4,8 @@ CREATE TABLE `Cliente` (
     `nombres` VARCHAR(40) NOT NULL,
     `apellido_p` VARCHAR(20) NOT NULL,
     `apellido_m` VARCHAR(20) NULL,
-    `fechaNacimiento` DATE NOT NULL,
-    `fechaCreacion` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `fecha_nacimiento` DATE NOT NULL,
+    `fecha_creacion` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -22,6 +22,7 @@ CREATE TABLE `Tarjeta` (
 -- CreateTable
 CREATE TABLE `Alojamiento` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `descripcion` TEXT NOT NULL,
     `banios` INTEGER NOT NULL DEFAULT 0,
     `alberca` BOOLEAN NOT NULL DEFAULT false,
     `cocina` BOOLEAN NOT NULL DEFAULT false,
@@ -29,6 +30,13 @@ CREATE TABLE `Alojamiento` (
     `television` BOOLEAN NOT NULL DEFAULT false,
     `aire_acondicionado` BOOLEAN NOT NULL DEFAULT false,
     `precio_por_noche` DECIMAL(10, 2) NOT NULL,
+    `direccion` VARCHAR(255) NOT NULL,
+    `ciudad` VARCHAR(100) NOT NULL,
+    `estado` VARCHAR(100) NOT NULL,
+    `pais` VARCHAR(100) NOT NULL,
+    `codigo_postal` VARCHAR(20) NOT NULL,
+    `latitud` DECIMAL(9, 6) NOT NULL,
+    `longitud` DECIMAL(9, 6) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
