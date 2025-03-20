@@ -9,11 +9,6 @@ export interface NewAlojamiento {
   television: boolean;
   aireAcondicionado: boolean;
   precioPorNoche: number;
-  direccion: string;
-  ciudad: string;
-  estado: string;
-  pais: string;
-  codigoPostal: string;
   latitud: number;
   longitud: number;
 }
@@ -28,11 +23,6 @@ export interface Alojamiento {
   television: boolean;
   aireAcondicionado: boolean;
   precioPorNoche: number;
-  direccion: string;
-  ciudad: string;
-  estado: string;
-  pais: string;
-  codigoPostal: string;
   latitud: number;
   longitud: number;
 }
@@ -46,11 +36,6 @@ export interface AlojamientoCriteria {
   television?: boolean;
   aireAcondicionado?: boolean;
   precioPorNoche?: number;
-  direccion?: SearchableString;
-  ciudad?: SearchableString;
-  estado?: SearchableString;
-  pais?: SearchableString;
-  codigoPostal?: SearchableString;
   latitud?: number;
   longitud?: number;
 }
@@ -65,11 +50,6 @@ export interface AlojamientoJson {
   television?: unknown;
   aire_acondicionado?: unknown;
   precio_por_noche?: unknown;
-  direccion?: unknown;
-  ciudad?: unknown;
-  estado?: unknown;
-  pais?: unknown;
-  codigo_postal?: unknown;
   latitud?: unknown;
   longitud?: unknown;
 }
@@ -84,11 +64,6 @@ export interface AlojamientoCriteriaJson {
   television?: unknown;
   aire_acondicionado?: unknown;
   precio_por_noche?: unknown;
-  direccion?: unknown;
-  ciudad?: unknown;
-  estado?: unknown;
-  pais?: unknown;
-  codigo_postal?: unknown;
   latitud?: unknown;
   longitud?: unknown;
 }
