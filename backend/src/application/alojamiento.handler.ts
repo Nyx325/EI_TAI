@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
-import Controller from "../application/controller.js";
+import Controller from "./http.controller.js";
 import JsonResponse from "../domain/exceptions/json.response.js";
-import { intService } from "../domain/services/int.service.js";
 
-export default abstract class HttpHandler<UM, RM, RNM, RI, RC> {
-  protected ctrl: Controller<UM, RM, RNM, RI, RC>;
+export default abstract class HttpHandler<JM, JC, M, NM, I, C> {
+  protected ctrl: Controller<JM, JC, M, NM, I, C>;
 
-  constructor(ctrl: Controller<UM, RM, RNM, RI, RC>) {
+  constructor(ctrl: Controller<JM, JC, M, NM, I, C>) {
     this.ctrl = ctrl;
   }
 
@@ -44,7 +43,7 @@ export default abstract class HttpHandler<UM, RM, RNM, RI, RC> {
 
   public async delete(req: Request, res: Response) {
     try {
-      const {id} = req.params;
+      const { id } = req.params;
       const eliminado = await this.ctrl.delete(id);
       res
         .status(200)
@@ -56,7 +55,7 @@ export default abstract class HttpHandler<UM, RM, RNM, RI, RC> {
 
   public async get(req: Request, res: Response) {
     try {
-      const {id} = req.params;
+      const { id } = req.params;
       const dato = await this.ctrl.get(id);
       if (dato) {
         res.status(200).json({ mensaje: "Dato encontrado", dato });
@@ -70,29 +69,19 @@ export default abstract class HttpHandler<UM, RM, RNM, RI, RC> {
 
   public async getBy(req: Request, res: Response) {
     try {
-      const { criteria, page } = this.getByEvent(req);
-
-      const validacion = intService.isValid(page);
-      if (!validacion.valid) {
-        throw new JsonResponse([validacion.message as string[]]);
-      }
-
-      const dato = await this.ctrl.getBy(criteria, page);
-      if (dato) {
-        res.status(200).json({ mensaje: "Dato encontrado", dato });
-      } else {
-        res.status(404).json({ mensaje: "Dato no encontrado" });
-      }
+      const busqueda = await this.ctrl.getBy(req.body);
+      res.status(200).json({ busqueda });
     } catch (e) {
       this.manejarError(e, res);
     }
   }
 
-  protected abstract addEvent(req: Request): RNM;
-  protected abstract updateEvent(req: Request): RM;
-  protected abstract getId(req: Request): RI;
+  protected abstract addEvent(req: Request): NM;
+  protected abstract updateEvent(req: Request): M;
+  protected abstract getId(req: Request): I;
   protected abstract getByEvent(req: Request): {
-    criteria: RC;
+    criteria: C;
     page: number;
   };
 }
+

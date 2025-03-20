@@ -1,15 +1,17 @@
-import Controller from "../application/controller.js";
+import Controller from "./http.controller.js";
 import Repository from "../application/repository.js";
 import Search from "../domain/value_objects/search.js";
 import {
   NewAlojamiento,
   Alojamiento,
   AlojamientoCriteria,
-  PotentialAlojamiento,
+  AlojamientoJson,
+  AlojamientoCriteriaJson,
 } from "../domain/entities/alojamiento.js";
 
 export default class AlojamientoController extends Controller<
-  PotentialAlojamiento,
+  AlojamientoJson,
+  AlojamientoCriteriaJson,
   Alojamiento,
   NewAlojamiento,
   number,
@@ -21,11 +23,11 @@ export default class AlojamientoController extends Controller<
     super(repo);
   }
 
-  public add(newData: PotentialAlojamiento): Promise<Alojamiento> {
+  public add(newData: AlojamientoJson): Promise<Alojamiento> {
     return this.repo.add(newData);
   }
 
-  public update(data: PotentialAlojamiento): Promise<Alojamiento> {
+  public update(data: AlojamientoJson): Promise<Alojamiento> {
     return this.repo.update(data);
   }
 
@@ -38,8 +40,7 @@ export default class AlojamientoController extends Controller<
   }
 
   public getBy(
-    criteria: AlojamientoCriteria,
-    page: number,
+    data: AlojamientoCriteriaJson,
   ): Promise<Search<Alojamiento, AlojamientoCriteria>> {
     return this.repo.getBy(criteria, page);
   }

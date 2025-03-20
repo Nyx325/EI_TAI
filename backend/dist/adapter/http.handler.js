@@ -39,7 +39,7 @@ export default class HttpHandler {
     }
     async delete(req, res) {
         try {
-            const id = this.getId(req);
+            const { id } = req.params;
             const eliminado = await this.ctrl.delete(id);
             res
                 .status(200)
@@ -51,7 +51,7 @@ export default class HttpHandler {
     }
     async get(req, res) {
         try {
-            const id = this.getId(req);
+            const { id } = req.params;
             const dato = await this.ctrl.get(id);
             if (dato) {
                 res.status(200).json({ mensaje: "Dato encontrado", dato });
@@ -66,7 +66,7 @@ export default class HttpHandler {
     }
     async getBy(req, res) {
         try {
-            const { criteria, page } = this.getByEvent(req.query);
+            const { criteria, page } = this.getByEvent(req);
             const validacion = intService.isValid(page);
             if (!validacion.valid) {
                 throw new JsonResponse([validacion.message]);

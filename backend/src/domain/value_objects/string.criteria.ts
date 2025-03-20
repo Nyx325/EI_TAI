@@ -7,3 +7,8 @@ export interface SearchableString {
   str: string;
   mode: SearchMode;
 }
+
+export interface SearchableStringJson {
+  contains?: unknown;
+  equals?: unknown;
+}

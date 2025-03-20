@@ -1,4 +1,4 @@
-import Controller from "../application/controller.js";
+import Controller from "./http.controller.js";
 export default class AlojamientoController extends Controller {
     constructor(repo) {
         super(repo);
@@ -15,7 +15,7 @@ export default class AlojamientoController extends Controller {
     get(id) {
         return this.repo.get(id);
     }
-    getBy(criteria, page) {
+    getBy(data) {
         return this.repo.getBy(criteria, page);
     }
 }

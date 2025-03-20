@@ -55,7 +55,7 @@ export interface AlojamientoCriteria {
   longitud?: number;
 }
 
-export interface PotentialAlojamiento {
+export interface AlojamientoJson {
   id?: unknown;
   descripcion?: unknown;
   banios?: unknown;
@@ -63,13 +63,32 @@ export interface PotentialAlojamiento {
   cocina?: unknown;
   wifi?: unknown;
   television?: unknown;
-  aireAcondicionado?: unknown;
-  precioPorNoche?: unknown;
+  aire_acondicionado?: unknown;
+  precio_por_noche?: unknown;
   direccion?: unknown;
   ciudad?: unknown;
   estado?: unknown;
   pais?: unknown;
-  codigoPostal?: unknown;
+  codigo_postal?: unknown;
+  latitud?: unknown;
+  longitud?: unknown;
+}
+
+export interface AlojamientoCriteriaJson {
+  id?: unknown;
+  descripcion?: unknown;
+  banios?: unknown;
+  alberca?: unknown;
+  cocina?: unknown;
+  wifi?: unknown;
+  television?: unknown;
+  aire_acondicionado?: unknown;
+  precio_por_noche?: unknown;
+  direccion?: unknown;
+  ciudad?: unknown;
+  estado?: unknown;
+  pais?: unknown;
+  codigo_postal?: unknown;
   latitud?: unknown;
   longitud?: unknown;
 }

@@ -6,7 +6,7 @@ import Service from "./service.js";
  */
 const regex = /^[1-9]\d*$/;
 
-export const intService: Service<number> = {
+export const intService: Service<unknown> = {
   isValid(value) {
     if (!value || !regex.test(`${value}`)) {
       return {
@@ -19,7 +19,7 @@ export const intService: Service<number> = {
   },
 };
 
-export const optionalIntService: Service<number> = {
+export const optionalIntService: Service<unknown> = {
   isValid(value) {
     if (!value) {
       return { valid: true };
