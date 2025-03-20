@@ -6,7 +6,7 @@
  *
  * @extends Error
  */
-export default class JsonErroResponse extends Error {
+export default class JsonResponse extends Error {
   /**
    * Array de objetos que contienen los detalles del error en un formato legible.
    * Cada objeto en el array debe estructurarse de forma que facilite la comprensión

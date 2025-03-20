@@ -1,15 +1,14 @@
-import { prisma } from "../../config.js";
-import Repository from "../../common/application/repository.js";
-import Alojamiento from "../domain/entities/alojamiento.js";
-import NewAlojamiento from "../domain/entities/new.alojamiento.js";
-import AlojamientoCriteria from "../domain/entities/alojamiento.criteria.js";
+import { prisma } from "../config.js";
+import Repository from "../application/repository.js";
+import {Alojamiento, NewAlojamiento, AlojamientoCriteria} from "../domain/entities/alojamiento.js";
+
 import {
   convertAlojamientoToPrisma,
   convertPrismaToAlojamiento,
-} from "../adapter/alojamiento.prisma.adaptert.js";
-import Search from "../../common/domain/value_objects/search.js";
-import searchableStringToPrisma from "../../common/adapters/searchable.string.prisma.js";
-import { PAGE_SIZE } from "../../config.js";
+} from "../adapter/alojamiento.prisma.adapter.js";
+import Search from "../domain/value_objects/search.js";
+import searchableStringToPrisma from "../adapter/searchable.string.js";
+import { PAGE_SIZE } from "../config.js";
 
 export default class AlojamientoPrismaRepository
   implements

@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
 import Controller from "../application/controller.js";
-import JsonErrorResponse from "../domain/exceptions/respuesta.json.error.js";
+import JsonResponse from "../domain/exceptions/json.response.js";
 import { intService } from "../domain/services/int.service.js";
 
-export default abstract class HttpHandler<M, NM, I, C> {
-  protected ctrl: Controller<M, NM, I, C>;
+export default abstract class HttpHandler<UM, RM, RNM, RI, RC> {
+  protected ctrl: Controller<UM, RM, RNM, RI, RC>;
 
-  constructor(ctrl: Controller<M, NM, I, C>) {
+  constructor(ctrl: Controller<UM, RM, RNM, RI, RC>) {
     this.ctrl = ctrl;
   }
 
   protected manejarError(error: unknown, res: Response) {
-    if (error instanceof JsonErrorResponse) {
+    if (error instanceof JsonResponse) {
       const errores = error.errors;
       res.status(400).json({ errores });
     } else {
@@ -22,8 +22,7 @@ export default abstract class HttpHandler<M, NM, I, C> {
 
   public async add(req: Request, res: Response) {
     try {
-      const nuevo = this.addEvent(req);
-      const creado = await this.ctrl.add(nuevo);
+      const creado = await this.ctrl.add(req.body);
       res
         .status(201)
         .json({ mensaje: "Registro creado correctamente", creado });
@@ -34,8 +33,7 @@ export default abstract class HttpHandler<M, NM, I, C> {
 
   public async update(req: Request, res: Response) {
     try {
-      const nuevo = this.updateEvent(req);
-      const actualizado = await this.ctrl.update(nuevo);
+      const actualizado = await this.ctrl.update(req.body);
       res
         .status(200)
         .json({ mensaje: "Registro actualizado correctamente", actualizado });
@@ -72,11 +70,11 @@ export default abstract class HttpHandler<M, NM, I, C> {
 
   public async getBy(req: Request, res: Response) {
     try {
-      const { criteria, page } = this.getByEvent(req);
+      const { criteria, page } = this.getByEvent(req.query);
 
       const validacion = intService.isValid(page);
       if (!validacion.valid) {
-        throw new JsonErrorResponse([validacion.message as string[]]);
+        throw new JsonResponse([validacion.message as string[]]);
       }
 
       const dato = await this.ctrl.getBy(criteria, page);
@@ -90,11 +88,11 @@ export default abstract class HttpHandler<M, NM, I, C> {
     }
   }
 
-  protected abstract addEvent(req: Request): NM;
-  protected abstract updateEvent(req: Request): M;
-  protected abstract getId(req: Request): I;
+  protected abstract addEvent(req: Request): RNM;
+  protected abstract updateEvent(req: Request): RM;
+  protected abstract getId(req: Request): RI;
   protected abstract getByEvent(req: Request): {
-    criteria: C;
+    criteria: RC;
     page: number;
   };
 }

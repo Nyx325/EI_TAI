@@ -1,11 +1,15 @@
-import Controller from "../../common/application/controller.js";
-import Repository from "../../common/application/repository.js";
-import Search from "../../common/domain/value_objects/search.js";
-import AlojamientoCriteria from "../domain/entities/alojamiento.criteria.js";
-import Alojamiento from "../domain/entities/alojamiento.js";
-import NewAlojamiento from "../domain/entities/new.alojamiento.js";
+import Controller from "../application/controller.js";
+import Repository from "../application/repository.js";
+import Search from "../domain/value_objects/search.js";
+import {
+  NewAlojamiento,
+  Alojamiento,
+  AlojamientoCriteria,
+  PotentialAlojamiento,
+} from "../domain/entities/alojamiento.js";
 
 export default class AlojamientoController extends Controller<
+  PotentialAlojamiento,
   Alojamiento,
   NewAlojamiento,
   number,
@@ -17,11 +21,11 @@ export default class AlojamientoController extends Controller<
     super(repo);
   }
 
-  public add(newData: NewAlojamiento): Promise<Alojamiento> {
+  public add(newData: PotentialAlojamiento): Promise<Alojamiento> {
     return this.repo.add(newData);
   }
 
-  public update(data: Alojamiento): Promise<Alojamiento> {
+  public update(data: PotentialAlojamiento): Promise<Alojamiento> {
     return this.repo.update(data);
   }
 

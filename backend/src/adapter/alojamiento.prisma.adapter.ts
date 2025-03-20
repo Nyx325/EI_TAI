@@ -1,6 +1,6 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { Alojamiento as PrismaAlojamiento } from "@prisma/client";
-import Alojamiento from "../domain/entities/alojamiento.js";
+import { Alojamiento } from "../domain/entities/alojamiento.js";
 
 /**
  * Función que convierte una instancia del tipo creado
