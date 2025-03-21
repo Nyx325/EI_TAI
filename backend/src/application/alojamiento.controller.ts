@@ -13,7 +13,14 @@ import {
   intOrZeroService,
   intService,
 } from "../domain/services/int.service.js";
-import { PriceService } from "../domain/services/float.service.js";
+import {
+  longitudeService,
+  PriceService,
+} from "../domain/services/float.service.js";
+import {
+  booleanService,
+  instanceBool,
+} from "../domain/services/boolean.service.js";
 
 const precioPorNocheService = new PriceService(10, 3500);
 
@@ -60,7 +67,7 @@ export default class AlojamientoController extends Controller<
       });
     }
 
-    const albercaV = intOrZeroService.isValid(alberca);
+    const albercaV = booleanService.isValid(alberca);
     if (!albercaV.valid) {
       errors.push({
         field: "alberca",
@@ -68,7 +75,7 @@ export default class AlojamientoController extends Controller<
       });
     }
 
-    const cocinaV = intOrZeroService.isValid(cocina);
+    const cocinaV = booleanService.isValid(cocina);
     if (!cocinaV.valid) {
       errors.push({
         field: "cocina",
@@ -92,7 +99,7 @@ export default class AlojamientoController extends Controller<
       });
     }
 
-    const aire_acondicionadoV = intOrZeroService.isValid(aire_acondicionado);
+    const aire_acondicionadoV = booleanService.isValid(aire_acondicionado);
     if (!aire_acondicionadoV.valid) {
       errors.push({
         field: "aire_acondicionado",
@@ -108,7 +115,34 @@ export default class AlojamientoController extends Controller<
       });
     }
 
-    return this.repo.add(newData);
+    const longitudV = longitudeService.isValid(longitud);
+    if (!longitudV.valid) {
+      errors.push({
+        field: "longitud",
+        message: longitudV.message,
+      });
+    }
+
+    const latitudV = longitudeService.isValid(latitud);
+    if (!latitudV.valid) {
+      errors.push({
+        field: "latitud",
+        message: latitudV.message,
+      });
+    }
+
+    return this.repo.add({
+      longitud: Number(longitud),
+      latitud: Number(latitud),
+      aireAcondicionado: instanceBool(aire_acondicionado),
+      alberca: instanceBool(alberca),
+      banios: Number(banios),
+      cocina: instanceBool(cocina),
+      descripcion: `${descripcion}`,
+      precioPorNoche: Number(precio_por_noche),
+      television: instanceBool(television),
+      wifi: instanceBool(wifi),
+    });
   }
 
   public update(data: AlojamientoJson): Promise<Alojamiento> {
