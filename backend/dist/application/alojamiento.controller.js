@@ -1,13 +1,13 @@
 import Controller from "./http.controller.js";
-import { nameService } from "../domain/services/name.service.js";
 import { intOrZeroService, intService, } from "../domain/services/int.service.js";
-import { PriceService } from "../domain/services/float.service.js";
+import { longitudeService, PriceService, } from "../domain/services/float.service.js";
+import { booleanService, instanceBool, } from "../domain/services/boolean.service.js";
 const precioPorNocheService = new PriceService(10, 3500);
 export default class AlojamientoController extends Controller {
     constructor(repo) {
         super(repo);
     }
-    add({ descripcion, banios, alberca, cocina, wifi, television, aire_acondicionado, precio_por_noche, direccion, ciudad, estado, pais, codigo_postal, latitud, longitud, }) {
+    add({ descripcion, banios, alberca, cocina, wifi, television, aire_acondicionado, precio_por_noche, latitud, longitud, }) {
         const errors = [];
         if (!descripcion || `${descripcion}`.trim() === "") {
             errors.push({
@@ -22,14 +22,14 @@ export default class AlojamientoController extends Controller {
                 message: baniosV.message,
             });
         }
-        const albercaV = intOrZeroService.isValid(alberca);
+        const albercaV = booleanService.isValid(alberca);
         if (!albercaV.valid) {
             errors.push({
                 field: "alberca",
                 message: albercaV.message,
             });
         }
-        const cocinaV = intOrZeroService.isValid(cocina);
+        const cocinaV = booleanService.isValid(cocina);
         if (!cocinaV.valid) {
             errors.push({
                 field: "cocina",
@@ -50,7 +50,7 @@ export default class AlojamientoController extends Controller {
                 message: televisionV.message,
             });
         }
-        const aire_acondicionadoV = intOrZeroService.isValid(aire_acondicionado);
+        const aire_acondicionadoV = booleanService.isValid(aire_acondicionado);
         if (!aire_acondicionadoV.valid) {
             errors.push({
                 field: "aire_acondicionado",
@@ -64,14 +64,32 @@ export default class AlojamientoController extends Controller {
                 message: precio_por_nocheV.message,
             });
         }
-        const paisV = nameService.isValid(`${pais}`);
-        if (!paisV.valid) {
+        const longitudV = longitudeService.isValid(longitud);
+        if (!longitudV.valid) {
             errors.push({
-                field: "pais",
-                message: paisV.message,
+                field: "longitud",
+                message: longitudV.message,
             });
         }
-        return this.repo.add(newData);
+        const latitudV = longitudeService.isValid(latitud);
+        if (!latitudV.valid) {
+            errors.push({
+                field: "latitud",
+                message: latitudV.message,
+            });
+        }
+        return this.repo.add({
+            longitud: Number(longitud),
+            latitud: Number(latitud),
+            aireAcondicionado: instanceBool(aire_acondicionado),
+            alberca: instanceBool(alberca),
+            banios: Number(banios),
+            cocina: instanceBool(cocina),
+            descripcion: `${descripcion}`,
+            precioPorNoche: Number(precio_por_noche),
+            television: instanceBool(television),
+            wifi: instanceBool(wifi),
+        });
     }
     update(data) {
         return this.repo.update(data);
