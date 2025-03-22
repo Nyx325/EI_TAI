@@ -11,6 +11,10 @@
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev"
   },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
