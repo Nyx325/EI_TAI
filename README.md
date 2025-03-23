@@ -19,9 +19,8 @@ si las rutas contaban como `adapter` y mejor le hice su propia carpeta
 └───routes
 ```
 
--**Domain:** Toda la lógica de negocio de nuestro sistema independiente
+- **Domain:** Toda la lógica de negocio de nuestro sistema independiente
 de las tecnologías usadas
-
 - **Entities:** Las representaciones de la información a almacenar en
   el sistema
 - **Exceptions:** Excepciones propias del sistema
