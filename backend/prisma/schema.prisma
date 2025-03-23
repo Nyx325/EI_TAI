@@ -1,6 +1,3 @@
-
-
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -25,7 +22,7 @@ model Cliente {
 model Tarjeta {
   id            Int    @id @default(autoincrement())
   numeroTarjeta String @map("numero_tarjeta") @db.VarChar(50)
-  clienteId     Int    @map("cliente_id") 
+  clienteId     Int    @map("cliente_id")
 
   Cliente Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
 }
@@ -48,8 +45,8 @@ model Alojamiento {
 }
 
 model Imagen {
-  id            Int  @id @default(autoincrement())
-  alojamientoId Int  @map("alojamiento_id")
+  id            Int @id @default(autoincrement())
+  alojamientoId Int @map("alojamiento_id")
 
   Alojamiento Alojamiento @relation(fields: [alojamientoId], references: [id], onDelete: Cascade)
 }
@@ -59,9 +56,9 @@ model Reserva {
   inicio        DateTime @default(now()) @db.Date
   fin           DateTime @db.Date
   total         Decimal  @db.Decimal(10, 2)
-  clienteId     Int      @map("cliente_id") 
-  alojamientoId Int      @map("alojamiento_id") 
+  clienteId     Int      @map("cliente_id")
+  alojamientoId Int      @map("alojamiento_id")
 
-  Cliente     Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  Cliente     Cliente     @relation(fields: [clienteId], references: [id], onDelete: Cascade)
   Alojamiento Alojamiento @relation(fields: [alojamientoId], references: [id], onDelete: Cascade)
 }

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import handler from "../implementation/alojamiento.prisma.handler.js";
+import {alojamientoPrismaHandler as handler} from "../implementation/alojamiento.prisma.js";
 
 const router = Router();
 

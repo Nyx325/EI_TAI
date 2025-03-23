@@ -1,16 +1,28 @@
 import { prisma } from "../config.js";
 import Repository from "../application/repository.js";
-import {Alojamiento, NewAlojamiento, AlojamientoCriteria} from "../domain/entities/alojamiento.js";
+import Search from "../domain/value_objects/search.js";
+import searchableStringToPrisma from "../adapter/searchable.string.js";
+import { PAGE_SIZE } from "../config.js";
+import HttpHandler from "../adapter/http.handler.js";
+import AlojamientoController from "../adapter/alojamiento.controller.js";
+
+import {
+  Alojamiento,
+  NewAlojamiento,
+  AlojamientoCriteria,
+} from "../domain/entities/alojamiento.js";
 
 import {
   convertAlojamientoToPrisma,
   convertPrismaToAlojamiento,
 } from "../adapter/alojamiento.prisma.adapter.js";
-import Search from "../domain/value_objects/search.js";
-import searchableStringToPrisma from "../adapter/searchable.string.js";
-import { PAGE_SIZE } from "../config.js";
 
-const alojamientoPrismaRepository: Repository<Alojamiento, NewAlojamiento, number, AlojamientoCriteria> = {
+export const alojamientoPrismaRepository: Repository<
+  Alojamiento,
+  NewAlojamiento,
+  number,
+  AlojamientoCriteria
+> = {
   async add(newData: NewAlojamiento): Promise<Alojamiento> {
     return prisma.alojamiento
       .create({ data: newData })
@@ -42,10 +54,7 @@ const alojamientoPrismaRepository: Repository<Alojamiento, NewAlojamiento, numbe
     criteria: AlojamientoCriteria,
     page: number,
   ): Promise<Search<Alojamiento, AlojamientoCriteria>> {
-    const {
-      descripcion,
-      ...restCriteria
-    } = criteria;
+    const { descripcion, ...restCriteria } = criteria;
 
     const where = {
       ...restCriteria, // Campos que no necesitan conversión
@@ -68,6 +77,7 @@ const alojamientoPrismaRepository: Repository<Alojamiento, NewAlojamiento, numbe
       result: results.map(convertPrismaToAlojamiento),
     };
   },
-}
+};
 
-export default alojamientoPrismaRepository;
+const controller = new AlojamientoController(alojamientoPrismaRepository);
+export const alojamientoPrismaHandler = new HttpHandler(controller);

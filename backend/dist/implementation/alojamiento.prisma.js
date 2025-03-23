@@ -1,8 +1,10 @@
 import { prisma } from "../config.js";
-import { convertAlojamientoToPrisma, convertPrismaToAlojamiento, } from "../adapter/alojamiento.prisma.adapter.js";
 import searchableStringToPrisma from "../adapter/searchable.string.js";
 import { PAGE_SIZE } from "../config.js";
-const alojamientoPrismaRepository = {
+import HttpHandler from "../adapter/http.handler.js";
+import AlojamientoController from "../adapter/alojamiento.controller.js";
+import { convertAlojamientoToPrisma, convertPrismaToAlojamiento, } from "../adapter/alojamiento.prisma.adapter.js";
+export const alojamientoPrismaRepository = {
     async add(newData) {
         return prisma.alojamiento
             .create({ data: newData })
@@ -52,4 +54,5 @@ const alojamientoPrismaRepository = {
         };
     },
 };
-export default alojamientoPrismaRepository;
+const controller = new AlojamientoController(alojamientoPrismaRepository);
+export const alojamientoPrismaHandler = new HttpHandler(controller);

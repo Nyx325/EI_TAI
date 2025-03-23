@@ -4,6 +4,7 @@ import { SearchMode } from "../domain/value_objects/string.criteria.js";
 import { intService, optionalIntOrZeroService, optionalIntService, } from "../domain/services/int.service.js";
 import { latitudeService, longitudeService, optionalLatitudeService, optionalLongitudeService, PriceService, } from "../domain/services/float.service.js";
 import { booleanService, optionalBooleanService, instanceBool, instanceOptionalBool, } from "../domain/services/boolean.service.js";
+import { alojamientoToAlojamientoJson } from "./alojamiento.json.js";
 const precioPorNocheService = new PriceService(10, 3500);
 const optionalPrecioPorNocheService = new PriceService(10, undefined, true);
 export default class AlojamientoController extends HttpController {
@@ -139,7 +140,7 @@ export default class AlojamientoController extends HttpController {
             throw new JsonResponse(errors);
         }
     }
-    add({ descripcion, banios, alberca, cocina, wifi, television, aire_acondicionado, precio_por_noche, latitud, longitud, }) {
+    async add({ descripcion, banios, alberca, cocina, wifi, television, aire_acondicionado, precio_por_noche, latitud, longitud, }) {
         this.validateNewAlojamiento({
             descripcion,
             banios,
@@ -152,7 +153,7 @@ export default class AlojamientoController extends HttpController {
             latitud,
             longitud,
         });
-        return this.repo.add({
+        const newRecord = await this.repo.add({
             longitud: Number(longitud),
             latitud: Number(latitud),
             aireAcondicionado: instanceBool(aire_acondicionado),
@@ -164,8 +165,9 @@ export default class AlojamientoController extends HttpController {
             television: instanceBool(television),
             wifi: instanceBool(wifi),
         });
+        return alojamientoToAlojamientoJson(newRecord);
     }
-    update({ id, descripcion, banios, alberca, cocina, wifi, television, aire_acondicionado, precio_por_noche, latitud, longitud, }) {
+    async update({ id, descripcion, banios, alberca, cocina, wifi, television, aire_acondicionado, precio_por_noche, latitud, longitud, }) {
         this.validateAlojamiento({
             id,
             descripcion,
@@ -179,7 +181,7 @@ export default class AlojamientoController extends HttpController {
             latitud,
             longitud,
         });
-        return this.repo.update({
+        const updated = await this.repo.update({
             id: Number(id),
             longitud: Number(longitud),
             latitud: Number(latitud),
@@ -192,12 +194,14 @@ export default class AlojamientoController extends HttpController {
             television: instanceBool(television),
             wifi: instanceBool(wifi),
         });
+        return alojamientoToAlojamientoJson(updated);
     }
     async delete(id) {
         this.validateId(id);
-        return this.repo.delete(Number(id));
+        const deleted = await this.repo.delete(Number(id));
+        return alojamientoToAlojamientoJson(deleted);
     }
-    get(id) {
+    async get(id) {
         const { valid, message } = intService.isValid(id);
         if (!valid) {
             throw new JsonResponse([
@@ -207,9 +211,10 @@ export default class AlojamientoController extends HttpController {
                 },
             ]);
         }
-        return this.repo.get(Number(id));
+        const record = await this.repo.get(Number(id));
+        return record ? alojamientoToAlojamientoJson(record) : undefined;
     }
-    getBy({ descripcion, banios, alberca, cocina, wifi, television, aireAcondicionado, precioPorNoche, latitud, longitud, page, }) {
+    async getBy({ descripcion, banios, alberca, cocina, wifi, television, aireAcondicionado, precioPorNoche, latitud, longitud, page, }) {
         const errors = [];
         const baniosV = optionalIntOrZeroService.isValid(banios);
         if (!baniosV.valid) {
@@ -284,7 +289,7 @@ export default class AlojamientoController extends HttpController {
         if (errors.length !== 0) {
             throw new JsonResponse(errors);
         }
-        return this.repo.getBy({
+        const search = await this.repo.getBy({
             descripcion: descripcion
                 ? {
                     mode: SearchMode.LIKE,
@@ -301,5 +306,11 @@ export default class AlojamientoController extends HttpController {
             latitud: latitud ? Number(latitud) : undefined,
             longitud: longitud ? Number(longitud) : undefined,
         }, Number(`${page ?? 1}`));
+        const { result, ...restSearch } = search;
+        const jsonResult = result.map(alojamientoToAlojamientoJson);
+        return {
+            ...restSearch,
+            result: jsonResult,
+        };
     }
 }

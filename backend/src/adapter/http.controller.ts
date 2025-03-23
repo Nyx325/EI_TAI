@@ -45,7 +45,7 @@ export default abstract class HttpController<JM, JC, M, NM, I, C> {
    * @param newData Datos en formato JSON (tipo JM) para crear el nuevo objeto.
    * @returns Una promesa que se resuelve con el objeto persistido de tipo M.
    */
-  public abstract add(newData: JM): Promise<M>;
+  public abstract add(newData: JM): Promise<JM>;
 
   /**
    * Actualiza un objeto existente.
@@ -56,9 +56,9 @@ export default abstract class HttpController<JM, JC, M, NM, I, C> {
    * @param data Datos en formato JSON (tipo JM) que contienen la información actualizada.
    * @returns Una promesa que se resuelve con el objeto actualizado de tipo M.
    */
-  public abstract update(data: JM): Promise<M>;
+  public abstract update(data: JM): Promise<JM>;
 
-  /**
+  /**s
    * Elimina un objeto a partir de su identificador.
    *
    * Este método debe validar el identificador recibido y, mediante el repositorio, eliminar
@@ -67,7 +67,7 @@ export default abstract class HttpController<JM, JC, M, NM, I, C> {
    * @param id Identificador del objeto a eliminar.
    * @returns Una promesa que se resuelve con el objeto eliminado de tipo M.
    */
-  public abstract delete(id: unknown): Promise<M>;
+  public abstract delete(id: unknown): Promise<JM>;
 
   /**
    * Obtiene un objeto por su identificador.
@@ -78,7 +78,7 @@ export default abstract class HttpController<JM, JC, M, NM, I, C> {
    * @param id Identificador del objeto a obtener.
    * @returns Una promesa que se resuelve con el objeto de tipo M o null/undefined si no se encuentra.
    */
-  public abstract get(id: unknown): Promise<M | null | undefined>;
+  public abstract get(id: unknown): Promise<JM | null | undefined>;
 
   /**
    * Realiza una búsqueda de objetos utilizando un criterio de filtrado.
@@ -91,5 +91,5 @@ export default abstract class HttpController<JM, JC, M, NM, I, C> {
    * @returns Una promesa que se resuelve con una instancia de Search que contiene los objetos
    * encontrados y los criterios de búsqueda utilizados (tipo {@link Search}<M, C>).
    */
-  public abstract getBy(filter: JC): Promise<Search<M, C>>;
+  public abstract getBy(filter: JC): Promise<Search<JM, C>>;
 }
