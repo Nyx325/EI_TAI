@@ -13,12 +13,13 @@ import {
 } from "../domain/entities/alojamiento.js";
 
 import {
-  intOrZeroService,
   intService,
   optionalIntOrZeroService,
+  optionalIntService,
 } from "../domain/services/int.service.js";
 
 import {
+  latitudeService,
   longitudeService,
   optionalLatitudeService,
   optionalLongitudeService,
@@ -117,7 +118,7 @@ export default class AlojamientoController extends Controller<
       });
     }
 
-    const wifiV = intOrZeroService.isValid(wifi);
+    const wifiV = booleanService.isValid(wifi);
     if (!wifiV.valid) {
       errors.push({
         field: "wifi",
@@ -125,7 +126,7 @@ export default class AlojamientoController extends Controller<
       });
     }
 
-    const televisionV = intOrZeroService.isValid(television);
+    const televisionV = booleanService.isValid(television);
     if (!televisionV.valid) {
       errors.push({
         field: "television",
@@ -157,7 +158,7 @@ export default class AlojamientoController extends Controller<
       });
     }
 
-    const latitudV = longitudeService.isValid(latitud);
+    const latitudV = latitudeService.isValid(latitud);
     if (!latitudV.valid) {
       errors.push({
         field: "latitud",
@@ -332,7 +333,7 @@ export default class AlojamientoController extends Controller<
   }: AlojamientoCriteriaJson): Promise<
     Search<Alojamiento, AlojamientoCriteria>
   > {
-    const errors = [];
+    const errors: object[] = [];
 
     const baniosV = optionalIntOrZeroService.isValid(banios);
     if (!baniosV.valid) {
@@ -408,7 +409,7 @@ export default class AlojamientoController extends Controller<
       });
     }
 
-    const pageV = intService.isValid(page);
+    const pageV = optionalIntService.isValid(page);
     if (!pageV.valid) {
       errors.push({
         field: "page",
@@ -428,15 +429,15 @@ export default class AlojamientoController extends Controller<
               str: `${descripcion}`,
             }
           : undefined,
-          banios: banios ? Number(banios) : undefined,
-          alberca: instanceOptionalBool(alberca),
-          cocina: instanceOptionalBool(cocina),
-          wifi: instanceBool(wifi),
-          television: instanceOptionalBool(television),
-          aireAcondicionado: instanceOptionalBool(aireAcondicionado),
-          precioPorNoche: precioPorNoche ? Number(precioPorNoche): undefined,
-          latitud: latitud ? Number(latitud) : undefined,
-          longitud: longitud ? Number(longitud) : undefined,
+        banios: banios ? Number(banios) : undefined,
+        alberca: instanceOptionalBool(alberca),
+        cocina: instanceOptionalBool(cocina),
+        wifi: instanceOptionalBool(wifi),
+        television: instanceOptionalBool(television),
+        aireAcondicionado: instanceOptionalBool(aireAcondicionado),
+        precioPorNoche: precioPorNoche ? Number(precioPorNoche) : undefined,
+        latitud: latitud ? Number(latitud) : undefined,
+        longitud: longitud ? Number(longitud) : undefined,
       },
       Number(`${page ?? 1}`)
     );

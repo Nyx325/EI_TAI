@@ -1,12 +1,15 @@
 export class FloatService {
-    optionalPrice;
+    optional;
     regex;
-    constructor(maxIntegers, optionalPrice = false) {
+    constructor(maxIntegers, optional = false) {
         this.regex = new RegExp(`^\\d{1,${maxIntegers}}(?:\\.\\d+)?$`);
-        this.optionalPrice = optionalPrice;
+        this.optional = optional;
     }
     isValid(value) {
-        if (!this.optionalPrice && (!value || `${value}`.trim() === "")) {
+        if (this.optional && (value === undefined || `${value}`.trim() === "")) {
+            return { valid: true };
+        }
+        if (!value || `${value}`.trim() === "") {
             return {
                 valid: false,
                 message: ["El valor no puede estar vacío"],

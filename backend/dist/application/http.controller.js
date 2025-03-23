@@ -1,5 +1,3 @@
-import JsonResponse from "../domain/exceptions/json.response.js";
-import { intService } from "../domain/services/int.service.js";
 /**
  * Clase abstracta que actúa como controlador HTTP para la persistencia de datos.
  * Su responsabilidad es validar que los datos que se envían al repositorio sean correctos
@@ -32,21 +30,5 @@ export default class HttpController {
      */
     constructor(repo) {
         this.repo = repo;
-    }
-    /**
-     * Valida el parámetro de paginación.
-     *
-     * Se utiliza un servicio de validación (intService) para comprobar que el valor de `page`
-     * sea un número entero válido. Si la validación falla, se lanza una excepción con una
-     * respuesta JSON que contiene los mensajes de error.
-     *
-     * @param page Valor a validar como número entero.
-     * @throws {JsonResponse} Si el valor de `page` no es válido.
-     */
-    validatePage(page) {
-        const { valid, message } = intService.isValid(page);
-        if (!valid) {
-            throw new JsonResponse([message]);
-        }
     }
 }

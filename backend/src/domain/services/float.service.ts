@@ -1,16 +1,20 @@
 import Service, { ServiceValidation } from "./service.js";
 
 export class FloatService implements Service<unknown> {
-  private optionalPrice: boolean;
+  private optional: boolean;
   private regex: RegExp;
 
-  constructor(maxIntegers: number, optionalPrice: boolean = false) {
+  constructor(maxIntegers: number, optional: boolean = false) {
     this.regex = new RegExp(`^\\d{1,${maxIntegers}}(?:\\.\\d+)?$`);
-    this.optionalPrice = optionalPrice;
+    this.optional = optional;
   }
 
   isValid(value?: unknown): ServiceValidation {
-    if (!this.optionalPrice && (!value || `${value}`.trim() === "")) {
+    if (this.optional && (value === undefined || `${value}`.trim() === "")) {
+      return { valid: true };
+    }
+
+    if (!value || `${value}`.trim() === "") {
       return {
         valid: false,
         message: ["El valor no puede estar vacío"],
@@ -34,7 +38,7 @@ export class PriceService extends FloatService {
   constructor(
     maxIntegers: number,
     minPrice?: number,
-    optionalPrice: boolean = false,
+    optionalPrice: boolean = false
   ) {
     super(maxIntegers, optionalPrice);
     this.minPrice = minPrice;
@@ -85,9 +89,9 @@ export const latitudeService: Service<unknown> = {
 
 export const optionalLatitudeService: Service<unknown> = {
   isValid(value) {
-    if(!value){
-      return {valid: true};
-    }else if (`${value}`.trim() === "") {
+    if (!value) {
+      return { valid: true };
+    } else if (`${value}`.trim() === "") {
       return {
         valid: false,
         message: ["Latitud requerida"],
@@ -133,12 +137,11 @@ export const longitudeService: Service<unknown> = {
   },
 };
 
-
 export const optionalLongitudeService: Service<unknown> = {
   isValid(value) {
-    if(!value){
-      return {valid: true}
-    }else if (`${value}`.trim() === "") {
+    if (!value) {
+      return { valid: true };
+    } else if (`${value}`.trim() === "") {
       return {
         valid: false,
         message: ["Latitud requerida"],

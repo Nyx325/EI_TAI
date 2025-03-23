@@ -1,5 +1,3 @@
-import JsonResponse from "../domain/exceptions/json.response.js";
-import { intService } from "../domain/services/int.service.js";
 import Search from "../domain/value_objects/search.js";
 import Repository from "./repository.js";
 
@@ -36,23 +34,6 @@ export default abstract class HttpController<JM, JC, M, NM, I, C> {
    */
   public constructor(repo: Repository<M, NM, I, C>) {
     this.repo = repo;
-  }
-
-  /**
-   * Valida el parámetro de paginación.
-   *
-   * Se utiliza un servicio de validación (intService) para comprobar que el valor de `page`
-   * sea un número entero válido. Si la validación falla, se lanza una excepción con una
-   * respuesta JSON que contiene los mensajes de error.
-   *
-   * @param page Valor a validar como número entero.
-   * @throws {JsonResponse} Si el valor de `page` no es válido.
-   */
-  protected validatePage(page?: unknown): void {
-    const { valid, message } = intService.isValid(page);
-    if (!valid) {
-      throw new JsonResponse([message as string[]]);
-    }
   }
 
   /**

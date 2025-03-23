@@ -10,16 +10,12 @@ import Search from "../domain/value_objects/search.js";
 import searchableStringToPrisma from "../adapter/searchable.string.js";
 import { PAGE_SIZE } from "../config.js";
 
-export default class AlojamientoPrismaRepository
-  implements
-    Repository<Alojamiento, NewAlojamiento, number, AlojamientoCriteria>
-{
+const alojamientoPrismaRepository: Repository<Alojamiento, NewAlojamiento, number, AlojamientoCriteria> = {
   async add(newData: NewAlojamiento): Promise<Alojamiento> {
     return prisma.alojamiento
       .create({ data: newData })
       .then((nuevo) => convertPrismaToAlojamiento(nuevo));
-  }
-
+  },
   async update(data: Alojamiento): Promise<Alojamiento> {
     return prisma.alojamiento
       .update({
@@ -27,24 +23,21 @@ export default class AlojamientoPrismaRepository
         data: convertAlojamientoToPrisma(data),
       })
       .then((actualizado) => convertPrismaToAlojamiento(actualizado));
-  }
-
+  },
   async get(id: number): Promise<Alojamiento | null | undefined> {
     return prisma.alojamiento
       .findFirst({
         where: { id },
       })
       .then((result) => (result ? convertPrismaToAlojamiento(result) : null));
-  }
-
+  },
   async delete(id: number): Promise<Alojamiento> {
     return prisma.alojamiento
       .delete({
         where: { id },
       })
       .then((result) => convertPrismaToAlojamiento(result));
-  }
-
+  },
   async getBy(
     criteria: AlojamientoCriteria,
     page: number,
@@ -74,5 +67,7 @@ export default class AlojamientoPrismaRepository
       criteria,
       result: results.map(convertPrismaToAlojamiento),
     };
-  }
+  },
 }
+
+export default alojamientoPrismaRepository;

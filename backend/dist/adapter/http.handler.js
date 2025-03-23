@@ -65,12 +65,14 @@ export default class HttpHandler {
     }
     async getBy(req, res) {
         try {
-            const dato = await this.ctrl.getBy(req.query);
-            if (dato) {
-                res.status(200).json({ mensaje: "Dato encontrado", dato });
+            const busqueda = await this.ctrl.getBy(req.query);
+            if (busqueda.result.length === 0) {
+                res.status(404).json({
+                    message: "No se encontraron resultados"
+                });
             }
             else {
-                res.status(404).json({ mensaje: "Dato no encontrado" });
+                res.status(200).json({ busqueda });
             }
         }
         catch (e) {

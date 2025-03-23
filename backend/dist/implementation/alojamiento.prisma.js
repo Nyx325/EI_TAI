@@ -2,12 +2,12 @@ import { prisma } from "../config.js";
 import { convertAlojamientoToPrisma, convertPrismaToAlojamiento, } from "../adapter/alojamiento.prisma.adapter.js";
 import searchableStringToPrisma from "../adapter/searchable.string.js";
 import { PAGE_SIZE } from "../config.js";
-export default class AlojamientoPrismaRepository {
+const alojamientoPrismaRepository = {
     async add(newData) {
         return prisma.alojamiento
             .create({ data: newData })
             .then((nuevo) => convertPrismaToAlojamiento(nuevo));
-    }
+    },
     async update(data) {
         return prisma.alojamiento
             .update({
@@ -15,21 +15,21 @@ export default class AlojamientoPrismaRepository {
             data: convertAlojamientoToPrisma(data),
         })
             .then((actualizado) => convertPrismaToAlojamiento(actualizado));
-    }
+    },
     async get(id) {
         return prisma.alojamiento
             .findFirst({
             where: { id },
         })
             .then((result) => (result ? convertPrismaToAlojamiento(result) : null));
-    }
+    },
     async delete(id) {
         return prisma.alojamiento
             .delete({
             where: { id },
         })
             .then((result) => convertPrismaToAlojamiento(result));
-    }
+    },
     async getBy(criteria, page) {
         const { descripcion, ...restCriteria } = criteria;
         const where = {
@@ -50,5 +50,6 @@ export default class AlojamientoPrismaRepository {
             criteria,
             result: results.map(convertPrismaToAlojamiento),
         };
-    }
-}
+    },
+};
+export default alojamientoPrismaRepository;

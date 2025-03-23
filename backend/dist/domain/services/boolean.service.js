@@ -4,7 +4,7 @@ export const booleanService = {
         if (value === undefined || value === null || `${value}`.trim() === "") {
             return {
                 valid: false,
-                message: ["El valor es obligatorio"],
+                message: ["El valor es obligatorio ('true' o 'false')"],
             };
         }
         else if (!regex.test(`${value}`.trim())) {
@@ -24,7 +24,7 @@ export const optionalBooleanService = {
         else if (`${value}`.trim() === "") {
             return {
                 valid: false,
-                message: ["El valor es obligatorio"],
+                message: ["El valor es obligatorio ('true' o 'false')"],
             };
         }
         else if (!regex.test(`${value}`.trim())) {

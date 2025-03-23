@@ -1,8 +1,8 @@
 import Controller from "./http.controller.js";
 import JsonResponse from "../domain/exceptions/json.response.js";
 import { SearchMode } from "../domain/value_objects/string.criteria.js";
-import { intOrZeroService, intService, optionalIntOrZeroService, } from "../domain/services/int.service.js";
-import { longitudeService, optionalLatitudeService, optionalLongitudeService, PriceService, } from "../domain/services/float.service.js";
+import { intService, optionalIntOrZeroService, optionalIntService, } from "../domain/services/int.service.js";
+import { latitudeService, longitudeService, optionalLatitudeService, optionalLongitudeService, PriceService, } from "../domain/services/float.service.js";
 import { booleanService, optionalBooleanService, instanceBool, instanceOptionalBool, } from "../domain/services/boolean.service.js";
 const precioPorNocheService = new PriceService(10, 3500);
 const optionalPrecioPorNocheService = new PriceService(10, undefined, true);
@@ -60,14 +60,14 @@ export default class AlojamientoController extends Controller {
                 message: cocinaV.message,
             });
         }
-        const wifiV = intOrZeroService.isValid(wifi);
+        const wifiV = booleanService.isValid(wifi);
         if (!wifiV.valid) {
             errors.push({
                 field: "wifi",
                 message: wifiV.message,
             });
         }
-        const televisionV = intOrZeroService.isValid(television);
+        const televisionV = booleanService.isValid(television);
         if (!televisionV.valid) {
             errors.push({
                 field: "television",
@@ -95,7 +95,7 @@ export default class AlojamientoController extends Controller {
                 message: longitudV.message,
             });
         }
-        const latitudV = longitudeService.isValid(latitud);
+        const latitudV = latitudeService.isValid(latitud);
         if (!latitudV.valid) {
             errors.push({
                 field: "latitud",
@@ -274,7 +274,7 @@ export default class AlojamientoController extends Controller {
                 message: longitudV.message,
             });
         }
-        const pageV = intService.isValid(page);
+        const pageV = optionalIntService.isValid(page);
         if (!pageV.valid) {
             errors.push({
                 field: "page",
@@ -294,7 +294,7 @@ export default class AlojamientoController extends Controller {
             banios: banios ? Number(banios) : undefined,
             alberca: instanceOptionalBool(alberca),
             cocina: instanceOptionalBool(cocina),
-            wifi: instanceBool(wifi),
+            wifi: instanceOptionalBool(wifi),
             television: instanceOptionalBool(television),
             aireAcondicionado: instanceOptionalBool(aireAcondicionado),
             precioPorNoche: precioPorNoche ? Number(precioPorNoche) : undefined,

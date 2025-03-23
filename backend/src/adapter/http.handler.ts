@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import HttpController from "../application/http.controller.js";
 import JsonResponse from "../domain/exceptions/json.response.js";
 
-export default abstract class HttpHandler<JM, JC, M, NM, I, C> {
+export default class HttpHandler<JM, JC, M, NM, I, C> {
   protected ctrl: HttpController<JM, JC, M, NM, I, C>;
 
   constructor(ctrl: HttpController<JM, JC, M, NM, I, C>) {
@@ -69,19 +69,17 @@ export default abstract class HttpHandler<JM, JC, M, NM, I, C> {
 
   public async getBy(req: Request, res: Response) {
     try {
-      const dato = await this.ctrl.getBy(req.query as JC);
-      if (dato) {
-        res.status(200).json({ mensaje: "Dato encontrado", dato });
-      } else {
-        res.status(404).json({ mensaje: "Dato no encontrado" });
+      const busqueda = await this.ctrl.getBy(req.query as JC);
+      if(busqueda.result.length === 0) {
+        res.status(404).json({
+          message: "No se encontraron resultados"
+        })
+      }else{
+        res.status(200).json({ busqueda });
       }
+
     } catch (e) {
       this.manejarError(e, res);
     }
   }
-
-  protected abstract getByEvent(req: Request): {
-    criteria: C;
-    page: number;
-  };
 }
