@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import HttpController from "../application/http.controller.js";
+import HttpController from "./http.controller.js";
 import JsonResponse from "../domain/exceptions/json.response.js";
 
 export default class HttpHandler<JM, JC, M, NM, I, C> {

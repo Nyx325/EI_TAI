@@ -1,5 +1,5 @@
 import Search from "../domain/value_objects/search.js";
-import Repository from "./repository.js";
+import Repository from "../application/repository.js";
 
 /**
  * Clase abstracta que actúa como controlador HTTP para la persistencia de datos.

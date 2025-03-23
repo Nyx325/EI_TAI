@@ -1,4 +1,4 @@
-import Controller from "./http.controller.js";
+import HttpController from "./http.controller.js";
 import Repository from "../application/repository.js";
 import Search from "../domain/value_objects/search.js";
 import JsonResponse from "../domain/exceptions/json.response.js";
@@ -36,7 +36,7 @@ import {
 const precioPorNocheService = new PriceService(10, 3500);
 const optionalPrecioPorNocheService = new PriceService(10, undefined, true);
 
-export default class AlojamientoController extends Controller<
+export default class AlojamientoController extends HttpController<
   AlojamientoJson,
   AlojamientoCriteriaJson,
   Alojamiento,
