@@ -9,7 +9,7 @@ import {
   Alojamiento,
   AlojamientoCriteria,
   AlojamientoJson,
-  AlojamientoCriteriaJson,
+  AlojamientoCriteriaQuery,
 } from "../domain/entities/alojamiento.js";
 
 import {
@@ -38,7 +38,7 @@ const optionalPrecioPorNocheService = new PriceService(10, undefined, true);
 
 export default class AlojamientoController extends HttpController<
   AlojamientoJson,
-  AlojamientoCriteriaJson,
+  AlojamientoCriteriaQuery,
   Alojamiento,
   NewAlojamiento,
   number,
@@ -330,7 +330,7 @@ export default class AlojamientoController extends HttpController<
     latitud,
     longitud,
     page,
-  }: AlojamientoCriteriaJson): Promise<
+  }: AlojamientoCriteriaQuery): Promise<
     Search<Alojamiento, AlojamientoCriteria>
   > {
     const errors: object[] = [];

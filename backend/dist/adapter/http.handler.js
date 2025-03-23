@@ -1,9 +1,36 @@
 import JsonResponse from "../domain/exceptions/json.response.js";
+/**
+ * Clase genérica para el manejo de peticiones HTTP utilizando un controlador.
+ *
+ * @template JM - Tipo de datos JSON del modelo (entrada).
+ * @template QC - Tipo de datos del criterio (entrada) para búsquedas.
+ * @template M - Tipo de modelo persistido.
+ * @template NM - Tipo de datos para crear un nuevo modelo.
+ * @template I - Tipo de identificador único del modelo.
+ * @template C - Tipo de criterio para búsquedas en el controlador.
+ */
 export default class HttpHandler {
+    /**
+     * Instancia del controlador que contiene la lógica de negocio.
+     */
     ctrl;
+    /**
+     * Crea una instancia de HttpHandler.
+     *
+     * @param ctrl - Instancia de HttpController que se usará para manejar la lógica de negocio.
+     */
     constructor(ctrl) {
         this.ctrl = ctrl;
     }
+    /**
+     * Maneja los errores ocurridos durante la ejecución de las operaciones.
+     *
+     * Si el error es una instancia de JsonResponse, envía una respuesta con estado 400 y muestra los errores.
+     * En caso contrario, registra el error y envía una respuesta con estado 500.
+     *
+     * @param error - Error ocurrido durante la operación.
+     * @param res - Objeto Response de Express para enviar la respuesta HTTP.
+     */
     manejarError(error, res) {
         if (error instanceof JsonResponse) {
             const errores = error.errors;
@@ -14,6 +41,14 @@ export default class HttpHandler {
             res.status(500).json({ mensaje: "Internal server error" });
         }
     }
+    /**
+     * Agrega un nuevo registro.
+     *
+     * Llama al método "add" del controlador y, en caso de éxito, envía una respuesta con estado 201.
+     *
+     * @param req - Objeto Request de Express que contiene el cuerpo de la petición.
+     * @param res - Objeto Response de Express para enviar la respuesta HTTP.
+     */
     async add(req, res) {
         try {
             const creado = await this.ctrl.add(req.body);
@@ -25,6 +60,14 @@ export default class HttpHandler {
             this.manejarError(e, res);
         }
     }
+    /**
+     * Actualiza un registro existente.
+     *
+     * Llama al método "update" del controlador y, en caso de éxito, envía una respuesta con estado 200.
+     *
+     * @param req - Objeto Request de Express que contiene el cuerpo con los datos a actualizar.
+     * @param res - Objeto Response de Express para enviar la respuesta HTTP.
+     */
     async update(req, res) {
         try {
             const actualizado = await this.ctrl.update(req.body);
@@ -36,6 +79,15 @@ export default class HttpHandler {
             this.manejarError(e, res);
         }
     }
+    /**
+     * Elimina un registro.
+     *
+     * Llama al método "delete" del controlador utilizando el parámetro "id" de la URL.
+     * Envía una respuesta con estado 200 en caso de éxito.
+     *
+     * @param req - Objeto Request de Express que debe incluir el parámetro "id" en la URL.
+     * @param res - Objeto Response de Express para enviar la respuesta HTTP.
+     */
     async delete(req, res) {
         try {
             const { id } = req.params;
@@ -48,6 +100,15 @@ export default class HttpHandler {
             this.manejarError(e, res);
         }
     }
+    /**
+     * Obtiene un registro específico.
+     *
+     * Llama al método "get" del controlador utilizando el parámetro "id" de la URL.
+     * Envía una respuesta con estado 200 si el dato se encuentra o 404 en caso contrario.
+     *
+     * @param req - Objeto Request de Express que debe incluir el parámetro "id" en la URL.
+     * @param res - Objeto Response de Express para enviar la respuesta HTTP.
+     */
     async get(req, res) {
         try {
             const { id } = req.params;
@@ -63,6 +124,15 @@ export default class HttpHandler {
             this.manejarError(e, res);
         }
     }
+    /**
+     * Realiza una búsqueda basada en criterios especificados en la consulta.
+     *
+     * Llama al método "getBy" del controlador, pasando los parámetros de búsqueda del query.
+     * Si no se encuentran resultados, envía una respuesta con estado 404.
+     *
+     * @param req - Objeto Request de Express que contiene los parámetros de búsqueda en `req.query`.
+     * @param res - Objeto Response de Express para enviar la respuesta HTTP.
+     */
     async getBy(req, res) {
         try {
             const busqueda = await this.ctrl.getBy(req.query);
