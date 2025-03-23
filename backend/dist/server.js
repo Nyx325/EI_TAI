@@ -5,5 +5,5 @@ const app = express();
 app.use(express.json());
 app.use("/alojamiento", alojamientoRouter);
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Local API running on http://localhost:${PORT}`);
 });
