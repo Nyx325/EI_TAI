@@ -55,15 +55,15 @@ export interface AlojamientoJson {
 }
 
 export interface AlojamientoCriteriaJson {
-  id?: unknown;
   descripcion?: unknown;
   banios?: unknown;
   alberca?: unknown;
   cocina?: unknown;
   wifi?: unknown;
   television?: unknown;
-  aire_acondicionado?: unknown;
-  precio_por_noche?: unknown;
+  aireAcondicionado?: unknown;
+  precioPorNoche?: unknown;
   latitud?: unknown;
   longitud?: unknown;
+  page?: unknown;
 }

@@ -51,22 +51,12 @@ export default class AlojamientoPrismaRepository
   ): Promise<Search<Alojamiento, AlojamientoCriteria>> {
     const {
       descripcion,
-      ciudad,
-      codigoPostal,
-      direccion,
-      estado,
-      pais,
       ...restCriteria
     } = criteria;
 
     const where = {
       ...restCriteria, // Campos que no necesitan conversión
       descripcion: searchableStringToPrisma(descripcion),
-      ciudad: searchableStringToPrisma(ciudad),
-      codigoPostal: searchableStringToPrisma(codigoPostal),
-      direccion: searchableStringToPrisma(direccion),
-      estado: searchableStringToPrisma(estado),
-      pais: searchableStringToPrisma(pais),
     };
 
     const [results, totalResults] = await Promise.all([

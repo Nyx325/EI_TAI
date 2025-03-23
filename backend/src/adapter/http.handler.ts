@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import HttpController from "../application/http.controller.js";
 import JsonResponse from "../domain/exceptions/json.response.js";
-import { intService } from "../domain/services/int.service.js";
 
 export default abstract class HttpHandler<JM, JC, M, NM, I, C> {
   protected ctrl: HttpController<JM, JC, M, NM, I, C>;
@@ -70,14 +69,7 @@ export default abstract class HttpHandler<JM, JC, M, NM, I, C> {
 
   public async getBy(req: Request, res: Response) {
     try {
-      const { criteria, page } = this.getByEvent(req);
-
-      const validacion = intService.isValid(page);
-      if (!validacion.valid) {
-        throw new JsonResponse([validacion.message as string[]]);
-      }
-
-      const dato = await this.ctrl.getBy(criteria, page);
+      const dato = await this.ctrl.getBy(req.query as JC);
       if (dato) {
         res.status(200).json({ mensaje: "Dato encontrado", dato });
       } else {

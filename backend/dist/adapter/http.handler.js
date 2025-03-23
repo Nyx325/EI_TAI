@@ -1,5 +1,4 @@
 import JsonResponse from "../domain/exceptions/json.response.js";
-import { intService } from "../domain/services/int.service.js";
 export default class HttpHandler {
     ctrl;
     constructor(ctrl) {
@@ -66,12 +65,7 @@ export default class HttpHandler {
     }
     async getBy(req, res) {
         try {
-            const { criteria, page } = this.getByEvent(req);
-            const validacion = intService.isValid(page);
-            if (!validacion.valid) {
-                throw new JsonResponse([validacion.message]);
-            }
-            const dato = await this.ctrl.getBy(criteria, page);
+            const dato = await this.ctrl.getBy(req.query);
             if (dato) {
                 res.status(200).json({ mensaje: "Dato encontrado", dato });
             }

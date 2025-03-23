@@ -1,13 +1,37 @@
 import Controller from "./http.controller.js";
-import { intOrZeroService, intService, } from "../domain/services/int.service.js";
-import { longitudeService, PriceService, } from "../domain/services/float.service.js";
-import { booleanService, instanceBool, } from "../domain/services/boolean.service.js";
+import JsonResponse from "../domain/exceptions/json.response.js";
+import { SearchMode } from "../domain/value_objects/string.criteria.js";
+import { intOrZeroService, intService, optionalIntOrZeroService, } from "../domain/services/int.service.js";
+import { longitudeService, optionalLatitudeService, optionalLongitudeService, PriceService, } from "../domain/services/float.service.js";
+import { booleanService, optionalBooleanService, instanceBool, instanceOptionalBool, } from "../domain/services/boolean.service.js";
 const precioPorNocheService = new PriceService(10, 3500);
+const optionalPrecioPorNocheService = new PriceService(10, undefined, true);
 export default class AlojamientoController extends Controller {
     constructor(repo) {
         super(repo);
     }
-    add({ descripcion, banios, alberca, cocina, wifi, television, aire_acondicionado, precio_por_noche, latitud, longitud, }) {
+    validateId(id) {
+        const { valid, message } = intService.isValid(id);
+        if (!valid) {
+            throw new JsonResponse([
+                {
+                    field: "id",
+                    message,
+                },
+            ]);
+        }
+        this.repo.get(Number(id)).then((search) => {
+            if (!search) {
+                throw new JsonResponse([
+                    {
+                        field: "id",
+                        message: "Registro no encontrado",
+                    },
+                ]);
+            }
+        });
+    }
+    validateNewAlojamiento({ descripcion, banios, alberca, cocina, wifi, television, aire_acondicionado, precio_por_noche, latitud, longitud, }) {
         const errors = [];
         if (!descripcion || `${descripcion}`.trim() === "") {
             errors.push({
@@ -78,6 +102,56 @@ export default class AlojamientoController extends Controller {
                 message: latitudV.message,
             });
         }
+        if (errors.length !== 0) {
+            throw new JsonResponse(errors);
+        }
+    }
+    validateAlojamiento({ id, descripcion, banios, alberca, cocina, wifi, television, aire_acondicionado, precio_por_noche, latitud, longitud, }) {
+        const errors = [];
+        try {
+            this.validateId(id);
+        }
+        catch (e) {
+            if (e instanceof JsonResponse) {
+                errors.push(e.errors);
+            }
+        }
+        try {
+            this.validateNewAlojamiento({
+                descripcion,
+                banios,
+                alberca,
+                cocina,
+                wifi,
+                television,
+                aire_acondicionado,
+                precio_por_noche,
+                latitud,
+                longitud,
+            });
+        }
+        catch (e) {
+            if (e instanceof JsonResponse) {
+                errors.push(e.errors);
+            }
+        }
+        if (errors.length !== 0) {
+            throw new JsonResponse(errors);
+        }
+    }
+    add({ descripcion, banios, alberca, cocina, wifi, television, aire_acondicionado, precio_por_noche, latitud, longitud, }) {
+        this.validateNewAlojamiento({
+            descripcion,
+            banios,
+            alberca,
+            cocina,
+            wifi,
+            television,
+            aire_acondicionado,
+            precio_por_noche,
+            latitud,
+            longitud,
+        });
         return this.repo.add({
             longitud: Number(longitud),
             latitud: Number(latitud),
@@ -91,16 +165,141 @@ export default class AlojamientoController extends Controller {
             wifi: instanceBool(wifi),
         });
     }
-    update(data) {
-        return this.repo.update(data);
+    update({ id, descripcion, banios, alberca, cocina, wifi, television, aire_acondicionado, precio_por_noche, latitud, longitud, }) {
+        this.validateAlojamiento({
+            id,
+            descripcion,
+            banios,
+            alberca,
+            cocina,
+            wifi,
+            television,
+            aire_acondicionado,
+            precio_por_noche,
+            latitud,
+            longitud,
+        });
+        return this.repo.update({
+            id: Number(id),
+            longitud: Number(longitud),
+            latitud: Number(latitud),
+            aireAcondicionado: instanceBool(aire_acondicionado),
+            alberca: instanceBool(alberca),
+            banios: Number(banios),
+            cocina: instanceBool(cocina),
+            descripcion: `${descripcion}`,
+            precioPorNoche: Number(precio_por_noche),
+            television: instanceBool(television),
+            wifi: instanceBool(wifi),
+        });
     }
-    delete(id) {
-        return this.repo.delete(id);
+    async delete(id) {
+        this.validateId(id);
+        return this.repo.delete(Number(id));
     }
     get(id) {
-        return this.repo.get(id);
+        const { valid, message } = intService.isValid(id);
+        if (!valid) {
+            throw new JsonResponse([
+                {
+                    field: "id",
+                    message,
+                },
+            ]);
+        }
+        return this.repo.get(Number(id));
     }
-    getBy(data) {
-        return this.repo.getBy(criteria, page);
+    getBy({ descripcion, banios, alberca, cocina, wifi, television, aireAcondicionado, precioPorNoche, latitud, longitud, page, }) {
+        const errors = [];
+        const baniosV = optionalIntOrZeroService.isValid(banios);
+        if (!baniosV.valid) {
+            errors.push({
+                field: "banios",
+                message: baniosV.message,
+            });
+        }
+        const albercaV = optionalBooleanService.isValid(alberca);
+        if (!albercaV.valid) {
+            errors.push({
+                field: "alberca",
+                message: albercaV.message,
+            });
+        }
+        const cocinaV = optionalBooleanService.isValid(cocina);
+        if (!cocinaV.valid) {
+            errors.push({
+                field: "cocina",
+                message: cocinaV.message,
+            });
+        }
+        const wifiV = optionalBooleanService.isValid(wifi);
+        if (!wifiV.valid) {
+            errors.push({
+                field: "wifi",
+                message: wifiV.message,
+            });
+        }
+        const televisionV = optionalBooleanService.isValid(television);
+        if (!televisionV.valid) {
+            errors.push({
+                field: "television",
+                message: televisionV.message,
+            });
+        }
+        const aireAcondicionadoV = optionalBooleanService.isValid(aireAcondicionado);
+        if (!aireAcondicionadoV.valid) {
+            errors.push({
+                field: "aireAcondicionado",
+                message: aireAcondicionadoV.message,
+            });
+        }
+        const precioPorNocheV = optionalPrecioPorNocheService.isValid(precioPorNoche);
+        if (!precioPorNocheV.valid) {
+            errors.push({
+                field: "precioPorNoche",
+                message: precioPorNocheV.message,
+            });
+        }
+        const latitudV = optionalLatitudeService.isValid(latitud);
+        if (!latitudV.valid) {
+            errors.push({
+                field: "latitud",
+                message: latitudV.message,
+            });
+        }
+        const longitudV = optionalLongitudeService.isValid(longitud);
+        if (!longitudV.valid) {
+            errors.push({
+                field: "longitud",
+                message: longitudV.message,
+            });
+        }
+        const pageV = intService.isValid(page);
+        if (!pageV.valid) {
+            errors.push({
+                field: "page",
+                message: pageV.message,
+            });
+        }
+        if (errors.length !== 0) {
+            throw new JsonResponse(errors);
+        }
+        return this.repo.getBy({
+            descripcion: descripcion
+                ? {
+                    mode: SearchMode.LIKE,
+                    str: `${descripcion}`,
+                }
+                : undefined,
+            banios: banios ? Number(banios) : undefined,
+            alberca: instanceOptionalBool(alberca),
+            cocina: instanceOptionalBool(cocina),
+            wifi: instanceBool(wifi),
+            television: instanceOptionalBool(television),
+            aireAcondicionado: instanceOptionalBool(aireAcondicionado),
+            precioPorNoche: precioPorNoche ? Number(precioPorNoche) : undefined,
+            latitud: latitud ? Number(latitud) : undefined,
+            longitud: longitud ? Number(longitud) : undefined,
+        }, Number(`${page ?? 1}`));
     }
 }

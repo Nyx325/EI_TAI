@@ -5,8 +5,9 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
-    "start": "prisma migrate deploy && node dist/server.js",
-    "dev": "prisma migrate dev && nodemon"
+    "migrate-dev":"prisma migrate dev",
+    "start": "npm run migrate-dev && prisma migrate deploy && node dist/server.js",
+    "dev": "nodemon"
   },
   "keywords": [],
   "author": "",

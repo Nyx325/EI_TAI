@@ -66,9 +66,61 @@ export const latitudeService = {
         return { valid: true };
     },
 };
+export const optionalLatitudeService = {
+    isValid(value) {
+        if (!value) {
+            return { valid: true };
+        }
+        else if (`${value}`.trim() === "") {
+            return {
+                valid: false,
+                message: ["Latitud requerida"],
+            };
+        }
+        else if (!latRegex.test(`${value}`.trim())) {
+            return {
+                valid: false,
+                message: [
+                    "La latitud debe ser un número entre -90 y 90 o undefined.",
+                    "Puede iniciar opcionalmente con un signo (+ o -).",
+                    "La parte entera debe ser de uno o dos dígitos (o 90 en caso límite).",
+                    "Si se incluye parte decimal, debe iniciarse con un punto seguido de uno o más dígitos.",
+                    "Ejemplos válidos: '45.123', '-90', '+0', '89.999'.",
+                ],
+            };
+        }
+        return { valid: true };
+    },
+};
 export const longitudeService = {
     isValid(value) {
         if (!value || `${value}`.trim() === "") {
+            return {
+                valid: false,
+                message: ["Latitud requerida"],
+            };
+        }
+        else if (!lonRegex.test(`${value}`.trim())) {
+            return {
+                valid: false,
+                message: [
+                    "La longitud debe ser un número entre -180 y 180.",
+                    "Puede iniciar opcionalmente con un signo (+ o -).",
+                    "La parte entera debe ser de uno a tres dígitos (permitiendo 180 como valor máximo).",
+                    "Si se incluye parte decimal, debe iniciarse con un punto seguido de uno o más dígitos.",
+                    "Ejemplos válidos: '45.123', '-180', '+0', '179.999'.",
+                ],
+            };
+        }
+        return { valid: true };
+    },
+};
+export const optionalLongitudeService = {
+    isValid(value) {
+        if (!value) {
+            return { valid: true };
+        }
+        else if (`${value}`.trim() === "") {
             return {
                 valid: false,
                 message: ["Latitud requerida"],
