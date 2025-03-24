@@ -20,7 +20,7 @@ export const alojamientoPrismaRepository = {
     },
     async get(id) {
         return prisma.alojamiento
-            .findFirst({
+            .findUnique({
             where: { id },
         })
             .then((result) => (result ? convertPrismaToAlojamiento(result) : null));
@@ -38,12 +38,8 @@ export const alojamientoPrismaRepository = {
             ...restCriteria, // Campos que no necesitan conversión
             descripcion: searchableStringToPrisma(descripcion),
         };
-        const [results, totalResults] = await Promise.all([
-            prisma.alojamiento.findMany({
-                where,
-                take: PAGE_SIZE,
-                skip: (page - 1) * PAGE_SIZE,
-            }),
+        const [results, totalResults] = await prisma.$transaction([
+            prisma.alojamiento.findMany({ where, take: PAGE_SIZE, skip: (page - 1) * PAGE_SIZE }),
             prisma.alojamiento.count({ where }),
         ]);
         return {

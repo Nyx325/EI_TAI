@@ -33,7 +33,7 @@ export default class HttpHandler {
      */
     manejarError(error, res) {
         if (error instanceof JsonResponse) {
-            const errores = error.errors;
+            const errores = error.errors.flat(); // Aplanar array
             res.status(400).json({ errores });
         }
         else {

@@ -38,7 +38,7 @@ export default class HttpHandler<JM, QC, M, NM, I, C> {
    */
   protected manejarError(error: unknown, res: Response) {
     if (error instanceof JsonResponse) {
-      const errores = error.errors;
+      const errores = error.errors.flat(); // Aplanar array
       res.status(400).json({ errores });
     } else {
       console.error(error);
