@@ -2,7 +2,7 @@ import { prisma } from "../config.js";
 import Repository from "../application/repository.js";
 import searchableStringToPrisma from "../adapter/searchable.string.js";
 import { PAGE_SIZE } from "../config.js";
-import Search from "../domain/value_objects/search.js";
+
 import {
   Cliente,
   ClienteNuevo,
@@ -34,13 +34,31 @@ export const clientePrismaRepository: Repository<
     return prisma.cliente.findFirst({ where: { id } });
   },
 
-  getBy(criteria, page) {
-    const { nombres, apellidoP, apellidoM, ...restCriteria } = criteria;
+  async getBy(criteria, page) {
+    const { nombres, apellidoP, apellidoM, email, ...restCriteria } = criteria;
 
     const where = {
       ...restCriteria,
       nombres: searchableStringToPrisma(nombres),
       apellidoP: searchableStringToPrisma(apellidoP),
+      apellidoM: searchableStringToPrisma(apellidoM),
+      email: searchableStringToPrisma(email),
+    };
+
+    const [result, totalResults] = await Promise.all([
+      prisma.cliente.findMany({
+        where,
+        take: PAGE_SIZE,
+        skip: (page - 1) * PAGE_SIZE,
+      }),
+      prisma.cliente.count({ where }),
+    ]);
+
+    return {
+      totalPages: Math.ceil(totalResults / PAGE_SIZE),
+      currentPage: page,
+      criteria,
+      result,
     };
   },
 };

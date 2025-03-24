@@ -12,6 +12,8 @@ model Cliente {
   nombres         String   @db.VarChar(40)
   apellidoP       String   @map("apellido_p") @db.VarChar(20)
   apellidoM       String?  @map("apellido_m") @db.VarChar(20)
+  email           String   @unique @db.VarChar(25)
+  password        String   @db.VarChar(25)
   fechaNacimiento DateTime @map("fecha_nacimiento") @db.Date
   fechaCreacion   DateTime @default(now()) @map("fecha_creacion") @db.Date
 

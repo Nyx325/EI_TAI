@@ -5,10 +5,10 @@ export interface Cliente {
   nombres: string;
   apellidoP: string;
   apellidoM: string | null | undefined;
-  fechaNacimiento: Date;
-  fechaCreacion: Date;
   email: string;
   password: string;
+  fechaNacimiento: Date;
+  fechaCreacion: Date;
 }
 
 export interface ClienteNuevo {
