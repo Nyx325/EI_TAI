@@ -15,7 +15,7 @@ export const clientePrismaRepository = {
         return prisma.cliente.delete({ where: { id } });
     },
     get(id) {
-        return prisma.cliente.findFirst({ where: { id } });
+        return prisma.cliente.findUnique({ where: { id } });
     },
     async getBy(criteria, page) {
         const { nombres, apellidoP, apellidoM, email, ...restCriteria } = criteria;
@@ -26,12 +26,8 @@ export const clientePrismaRepository = {
             apellidoM: searchableStringToPrisma(apellidoM),
             email: searchableStringToPrisma(email),
         };
-        const [result, totalResults] = await Promise.all([
-            prisma.cliente.findMany({
-                where,
-                take: PAGE_SIZE,
-                skip: (page - 1) * PAGE_SIZE,
-            }),
+        const [result, totalResults] = await prisma.$transaction([
+            prisma.cliente.findMany({ where, take: PAGE_SIZE, skip: (page - 1) * PAGE_SIZE }),
             prisma.cliente.count({ where }),
         ]);
         return {

@@ -35,6 +35,7 @@ export interface ClienteJson {
   apellido_paterno?: unknown;
   apellido_materno?: unknown;
   fecha_nacimiento?: unknown;
+  fecha_creacion?: unknown;
   email?: unknown;
   password?: unknown;
 }

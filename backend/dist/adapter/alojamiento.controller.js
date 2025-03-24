@@ -4,6 +4,7 @@ import JsonResponse from "../domain/exceptions/json.response.js";
 import { SearchMode } from "../domain/value_objects/string.criteria.js";
 import { alojamientoToAlojamientoJson } from "./alojamiento.json.js";
 import { intService } from "../domain/services/int.service.js";
+import { handleZodError } from "./zod.handler.js";
 // Esquemas Zod para validación
 const NewAlojamientoSchema = z.object({
     descripcion: z.string({ required_error: "Ingrese un breve texto sobre el alojamiento" }).min(1, "Ingrese un breve texto sobre el alojamiento"),
@@ -57,31 +58,15 @@ export default class AlojamientoController extends HttpController {
     constructor(repo) {
         super(repo);
     }
-    handleZodError(error) {
-        const errors = error.errors.map((err) => ({
-            field: err.path[0] || "general",
-            message: err.message,
-        }));
-        throw new JsonResponse(errors);
-    }
-    async validateId(id) {
-        const result = z.number().int().positive().safeParse(id);
-        if (!result.success)
-            this.handleZodError(result.error);
-        const exists = await this.repo.get(result.data);
-        if (!exists) {
-            throw new JsonResponse([{ field: "id", message: "Registro no encontrado" }]);
-        }
-    }
     validateNewAlojamiento(data) {
         const result = NewAlojamientoSchema.safeParse(data);
         if (!result.success)
-            this.handleZodError(result.error);
+            handleZodError(result.error);
     }
     validateAlojamiento(data) {
         const result = AlojamientoSchema.safeParse(data);
         if (!result.success)
-            this.handleZodError(result.error);
+            handleZodError(result.error);
     }
     async add(data) {
         this.validateNewAlojamiento(data);
@@ -119,7 +104,7 @@ export default class AlojamientoController extends HttpController {
     async getBy(query) {
         const result = CriteriaSchema.safeParse(query);
         if (!result.success)
-            this.handleZodError(result.error);
+            handleZodError(result.error);
         if (!result.data)
             throw new Error();
         const criteria = result.data;

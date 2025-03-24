@@ -1,5 +1,8 @@
 import Search from "../domain/value_objects/search.js";
 import Repository from "../application/repository.js";
+import { z } from "zod";
+import { handleZodError } from "./zod.handler.js";
+import JsonResponse from "../domain/exceptions/json.response.js";
 
 /**
  * Clase abstracta que actúa como controlador HTTP para la persistencia de datos.
@@ -34,6 +37,16 @@ export default abstract class HttpController<JM, JC, M, NM, I, C> {
    */
   public constructor(repo: Repository<M, NM, I, C>) {
     this.repo = repo;
+  }
+
+  protected async validateId(id?: unknown) {
+    const result = z.number().int().positive().safeParse(id);
+    if (!result.success) handleZodError(result.error);
+
+    const exists = await this.repo.get(result.data as I);
+    if (!exists) {
+      throw new JsonResponse([{ field: "id", message: "Registro no encontrado" }]);
+    }
   }
 
   /**

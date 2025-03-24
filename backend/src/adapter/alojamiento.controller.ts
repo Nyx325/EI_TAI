@@ -13,6 +13,7 @@ import {
   AlojamientoCriteriaQuery,
 } from "../domain/entities/alojamiento.js";
 import { intService } from "../domain/services/int.service.js";
+import { handleZodError } from "./zod.handler.js";
 
 // Esquemas Zod para validación
 const NewAlojamientoSchema = z.object({
@@ -80,32 +81,14 @@ export default class AlojamientoController extends HttpController<
     super(repo);
   }
 
-  private handleZodError(error: z.ZodError) {
-    const errors = error.errors.map((err) => ({
-      field: err.path[0] || "general",
-      message: err.message,
-    }));
-    throw new JsonResponse(errors);
-  }
-
-  protected async validateId(id?: unknown) {
-    const result = z.number().int().positive().safeParse(id);
-    if (!result.success) this.handleZodError(result.error);
-
-    const exists = await this.repo.get(result.data as number);
-    if (!exists) {
-      throw new JsonResponse([{ field: "id", message: "Registro no encontrado" }]);
-    }
-  }
-
   protected validateNewAlojamiento(data: AlojamientoJson) {
     const result = NewAlojamientoSchema.safeParse(data);
-    if (!result.success) this.handleZodError(result.error);
+    if (!result.success) handleZodError(result.error);
   }
 
   protected validateAlojamiento(data: AlojamientoJson) {
     const result = AlojamientoSchema.safeParse(data);
-    if (!result.success) this.handleZodError(result.error);
+    if (!result.success) handleZodError(result.error);
   }
 
   public async add(data: AlojamientoJson): Promise<AlojamientoJson> {
@@ -151,7 +134,7 @@ export default class AlojamientoController extends HttpController<
     query: AlojamientoCriteriaQuery
   ): Promise<Search<AlojamientoJson, AlojamientoCriteria>> {
     const result = CriteriaSchema.safeParse(query);
-    if (!result.success) this.handleZodError(result.error);
+    if (!result.success) handleZodError(result.error);
 
     if(!result.data) throw new Error();
 

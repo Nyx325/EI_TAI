@@ -5,4 +5,6 @@ dotenv.config();
 
 export const PORT = Number(process.env.PORT ?? 3000);
 export const PAGE_SIZE = Number(process.env.PAGE_SIZE ?? 15);
+export const MIN_AGE = Number(process.env.MIN_AGE ?? 18)
 export const prisma = new PrismaClient();
+await prisma.$connect();

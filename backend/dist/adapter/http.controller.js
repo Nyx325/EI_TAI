@@ -1,3 +1,6 @@
+import { z } from "zod";
+import { handleZodError } from "./zod.handler.js";
+import JsonResponse from "../domain/exceptions/json.response.js";
 /**
  * Clase abstracta que actúa como controlador HTTP para la persistencia de datos.
  * Su responsabilidad es validar que los datos que se envían al repositorio sean correctos
@@ -30,5 +33,14 @@ export default class HttpController {
      */
     constructor(repo) {
         this.repo = repo;
+    }
+    async validateId(id) {
+        const result = z.number().int().positive().safeParse(id);
+        if (!result.success)
+            handleZodError(result.error);
+        const exists = await this.repo.get(result.data);
+        if (!exists) {
+            throw new JsonResponse([{ field: "id", message: "Registro no encontrado" }]);
+        }
     }
 }
