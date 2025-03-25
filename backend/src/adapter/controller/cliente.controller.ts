@@ -170,7 +170,7 @@ export default class ClienteController extends HttpController<
     };
   }
 
-  protected async repetatedEmail(email: string) {
+  protected async repetatedEmail(email: string, originalId?: number) {
     const searchEmail = await this.repo.getBy(
       {
         email: {
@@ -181,7 +181,8 @@ export default class ClienteController extends HttpController<
       1
     );
 
-    if (searchEmail.result.length !== 0) {
+    const resNum = searchEmail.result.length
+    if ((!originalId && resNum !== 0)||(resNum !== 0 && searchEmail.result[0].id !== originalId)) {
       throw new JsonResponse([
         {
           field: "email",
@@ -214,7 +215,7 @@ export default class ClienteController extends HttpController<
     if (!validation.success) handleZodError(validation.error);
 
     const data = validation.data as ClienteJson;
-    await this.repetatedEmail(data.email as string);
+    await this.repetatedEmail(data.email as string, Number(data.id));
 
     const updated = await this.repo.update({
       id: data.id as number,

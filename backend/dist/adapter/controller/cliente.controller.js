@@ -104,14 +104,15 @@ export default class ClienteController extends HttpController {
             fecha_creacion: fechaCreacion,
         };
     }
-    async repetatedEmail(email) {
+    async repetatedEmail(email, originalId) {
         const searchEmail = await this.repo.getBy({
             email: {
                 mode: SearchMode.EQUALS,
                 str: email,
             },
         }, 1);
-        if (searchEmail.result.length !== 0) {
+        const resNum = searchEmail.result.length;
+        if ((!originalId && resNum !== 0) || (resNum !== 0 && searchEmail.result[0].id !== originalId)) {
             throw new JsonResponse([
                 {
                     field: "email",
@@ -141,7 +142,7 @@ export default class ClienteController extends HttpController {
         if (!validation.success)
             handleZodError(validation.error);
         const data = validation.data;
-        await this.repetatedEmail(data.email);
+        await this.repetatedEmail(data.email, Number(data.id));
         const updated = await this.repo.update({
             id: data.id,
             nombres: data.nombres,
@@ -163,7 +164,6 @@ export default class ClienteController extends HttpController {
         const result = z.coerce.number().int().positive().safeParse(id);
         if (!result.success)
             handleZodError(result.error);
-        console.log(`ID dado: ${id}`);
         const seek = await this.repo.get(Number(id));
         return seek ? clienteToJson(seek) : undefined;
     }
