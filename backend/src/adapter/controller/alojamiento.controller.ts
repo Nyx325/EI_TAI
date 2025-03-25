@@ -15,57 +15,6 @@ import {
 import { intService } from "../../domain/services/int.service.js";
 import { handleZodError } from "../handler/zod.handler.js";
 
-// Esquemas Zod para validación
-const NewAlojamientoSchema = z.object({
-  descripcion: z.string({required_error: "Ingrese un breve texto sobre el alojamiento"}).min(1, "Ingrese un breve texto sobre el alojamiento"),
-  banios: z.number().int().positive("Debe ser un entero positivo diferente de cero"),
-  alberca: z.boolean({ required_error: "El valor es obligatorio ('true' o 'false')" }),
-  cocina: z.boolean({ required_error: "El valor es obligatorio ('true' o 'false')" }),
-  wifi: z.boolean({ required_error: "El valor es obligatorio ('true' o 'false')" }),
-  television: z.boolean({ required_error: "El valor es obligatorio ('true' o 'false')" }),
-  aire_acondicionado: z.boolean({ required_error: "El valor es obligatorio ('true' o 'false')" }),
-  precio_por_noche: z.number()
-    .min(3500, "Precio mínimo: 10"),
-  latitud: z.number()
-    .min(-90, "Latitud mínima: -90")
-    .max(90, "Latitud máxima: 90"),
-  longitud: z.number()
-    .min(-180, "Longitud mínima: -180")
-    .max(180, "Longitud máxima: 180"),
-});
-
-const AlojamientoSchema = NewAlojamientoSchema.extend({
-  id: z.number().int().positive("ID inválido"),
-});
-
-const CriteriaSchema = z.object({
-  descripcion: z.string().optional(),
-  banios: z.coerce.number()
-    .int("Debe ser un entero")
-    .positive("Debe ser positivo")
-    .optional(),
-  alberca: z.coerce.boolean().optional(),
-  cocina: z.coerce.boolean().optional(),
-  wifi: z.coerce.boolean().optional(),
-  television: z.coerce.boolean().optional(),
-  aireAcondicionado: z.coerce.boolean().optional(),
-  precioPorNoche: z.coerce.number()
-    .min(10, "Precio mínimo: 10")
-    .optional(),
-  latitud: z.coerce.number()
-    .min(-90, "Latitud inválida")
-    .max(90, "Latitud inválida")
-    .optional(),
-  longitud: z.coerce.number()
-    .min(-180, "Longitud inválida")
-    .max(180, "Longitud inválida")
-    .optional(),
-  page: z.coerce.number()
-    .int("Página debe ser entero")
-    .positive("Página debe ser positiva")
-    .optional()
-    .default(1),
-});
 
 export default class AlojamientoController extends HttpController<
   AlojamientoJson,
@@ -75,6 +24,60 @@ export default class AlojamientoController extends HttpController<
   number,
   AlojamientoCriteria
 > {
+  protected newAlojamientoSchema = z.object({
+    descripcion: z.string({ required_error: "Ingrese un breve texto sobre el alojamiento" }).min(1, "Ingrese un breve texto sobre el alojamiento"),
+    banios: z.number().int().positive("Debe ser un entero positivo diferente de cero"),
+    alberca: z.boolean({ required_error: "El valor es obligatorio ('true' o 'false')" }),
+    cocina: z.boolean({ required_error: "El valor es obligatorio ('true' o 'false')" }),
+    wifi: z.boolean({ required_error: "El valor es obligatorio ('true' o 'false')" }),
+    television: z.boolean({ required_error: "El valor es obligatorio ('true' o 'false')" }),
+    aire_acondicionado: z.boolean({ required_error: "El valor es obligatorio ('true' o 'false')" }),
+    precio_por_noche: z.number()
+      .min(3500, "Precio mínimo: 10"),
+    latitud: z.number()
+      .min(-90, "Latitud mínima: -90")
+      .max(90, "Latitud máxima: 90"),
+    longitud: z.number()
+      .min(-180, "Longitud mínima: -180")
+      .max(180, "Longitud máxima: 180"),
+  });
+
+  protected alojamientoSchema = this.newAlojamientoSchema.extend({
+    id: z.number().int().positive("ID inválido").refine(async (id) =>{
+      const record = await this.repo.get(id);
+      return record
+    }, "No se encontró el registro"),
+  });
+
+  protected criteriaSchema = z.object({
+    descripcion: z.string().optional(),
+    banios: z.coerce.number()
+      .int("Debe ser un entero")
+      .positive("Debe ser positivo")
+      .optional(),
+    alberca: z.coerce.boolean().optional(),
+    cocina: z.coerce.boolean().optional(),
+    wifi: z.coerce.boolean().optional(),
+    television: z.coerce.boolean().optional(),
+    aireAcondicionado: z.coerce.boolean().optional(),
+    precioPorNoche: z.coerce.number()
+      .min(10, "Precio mínimo: 10")
+      .optional(),
+    latitud: z.coerce.number()
+      .min(-90, "Latitud inválida")
+      .max(90, "Latitud inválida")
+      .optional(),
+    longitud: z.coerce.number()
+      .min(-180, "Longitud inválida")
+      .max(180, "Longitud inválida")
+      .optional(),
+    page: z.coerce.number()
+      .int("Página debe ser entero")
+      .positive("Página debe ser positiva")
+      .optional()
+      .default(1),
+  });
+
   constructor(
     repo: Repository<Alojamiento, NewAlojamiento, number, AlojamientoCriteria>
   ) {
@@ -82,12 +85,12 @@ export default class AlojamientoController extends HttpController<
   }
 
   protected validateNewAlojamiento(data: AlojamientoJson) {
-    const result = NewAlojamientoSchema.safeParse(data);
+    const result = this.newAlojamientoSchema.safeParse(data);
     if (!result.success) handleZodError(result.error);
   }
 
-  protected validateAlojamiento(data: AlojamientoJson) {
-    const result = AlojamientoSchema.safeParse(data);
+  protected async validateAlojamiento(data: AlojamientoJson) {
+    const result = await this.alojamientoSchema.safeParseAsync(data);
     if (!result.success) handleZodError(result.error);
   }
 
@@ -111,7 +114,7 @@ export default class AlojamientoController extends HttpController<
   }
 
   public async update(data: AlojamientoJson): Promise<AlojamientoJson> {
-    this.validateAlojamiento(data);
+    await this.validateAlojamiento(data);
 
     const updated = await this.repo.update({
       id: data.id as number,
@@ -133,10 +136,10 @@ export default class AlojamientoController extends HttpController<
   public async getBy(
     query: AlojamientoCriteriaQuery
   ): Promise<Search<AlojamientoJson, AlojamientoCriteria>> {
-    const result = CriteriaSchema.safeParse(query);
+    const result = this.criteriaSchema.safeParse(query);
     if (!result.success) handleZodError(result.error);
 
-    if(!result.data) throw new Error();
+    if (!result.data) throw new Error();
 
     const criteria = result.data;
     const search = await this.repo.getBy(

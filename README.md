@@ -63,3 +63,8 @@ npm run start
 # Para desarrollo
 npm run dev
 ```
+
+## TODO
+- [ ] Corregir validacion de zod dentro del controlador en los controladores
+    existentes
+- [ ] Corregir script de migracion cada que se ejecuta `dev`
