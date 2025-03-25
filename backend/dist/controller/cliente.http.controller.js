@@ -47,7 +47,7 @@ export default class ClienteController extends HttpController {
     async get(id) {
         console.log(`Tipo: ${typeof id}`);
         console.log(`Valor: ${id}`);
-        const result = this.idSchema.safeParse({ id });
+        const result = this.intIdSchema.safeParse({ id });
         if (!result.success) {
             return new Err(extractErrors(result.error));
         }
@@ -55,7 +55,7 @@ export default class ClienteController extends HttpController {
         return new Ok(record);
     }
     async delete(id) {
-        const result = await this.existsSchema.safeParseAsync({ id });
+        const result = await this.intExistsSchema.safeParseAsync({ id });
         if (!result.success) {
             return new Err(extractErrors(result.error));
         }
@@ -165,19 +165,6 @@ export default class ClienteController extends HttpController {
             "Al menos un carácter especial (@$!%*?&._)",
         ].join(", ")),
     });
-    idSchema = z.object({
-        id: z.coerce
-            .number()
-            .int("El ID debe ser un número entero")
-            .positive("El ID debe ser un número positivo"),
-    });
-    existsSchema = z.object({
-        id: z.coerce
-            .number()
-            .int("El ID debe ser un número entero")
-            .positive("El ID debe ser un número positivo")
-            .refine(async (id) => await this.repo.get(id), "No se encontró el registro"),
-    });
     updateSchema = this.newSchema
         // En update, es probable que quieras redefinir la validación del email para diferenciar
         // el caso en que se cambia el email:
@@ -207,7 +194,7 @@ export default class ClienteController extends HttpController {
             .transform((date) => new Date(date.getFullYear(), date.getMonth(), date.getDate()))),
     })
         // Combina el esquema de datos con el esquema del ID
-        .merge(this.existsSchema)
+        .merge(this.intExistsSchema)
         // Validación extra para el email que se quiere actualizar, verificando que no exista ya otro registro
         .superRefine(async (data, ctx) => {
         const search = await this.repo.getBy({

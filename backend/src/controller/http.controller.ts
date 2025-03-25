@@ -2,6 +2,7 @@ import { Result } from "neverthrow";
 import JsonError from "../model/value_object/json.error.js";
 import Repository from "../model/repository/repository.js";
 import Search from "../model/value_object/search.js";
+import { z } from "zod";
 
 export default abstract class HttpController<M, NM, I, C> {
   protected repo;
@@ -23,4 +24,22 @@ export default abstract class HttpController<M, NM, I, C> {
   public abstract getBy(
     criteria: unknown,
   ): Promise<Result<Search<unknown, unknown>, JsonError[]>>;
+
+  protected intIdSchema = z.object({
+    id: z.coerce
+      .number()
+      .int("El ID debe ser un número entero")
+      .positive("El ID debe ser un número positivo"),
+  });
+
+  protected intExistsSchema = z.object({
+    id: z.coerce
+      .number()
+      .int("El ID debe ser un número entero")
+      .positive("El ID debe ser un número positivo")
+      .refine(
+        async (id) => await this.repo.get(id as I),
+        "No se encontró el registro",
+      ),
+  });
 }
