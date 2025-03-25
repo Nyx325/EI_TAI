@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { clientePrismaRepository as repo } from "../implementation/cliente.prisma.js";
-import ClienteController from "../adapter/controller/cliente.controller.js";
-import HttpHandler from "../adapter/handler/http.handler.js";
+import ClienteController from "../controller/cliente.http.controller.js";
 
-
-const controller = new ClienteController(repo);
-export const handler = new HttpHandler(controller);
+import { clientePrismaRepository as repo } from "../model/repository/cliente.prisma.repository.js";
+import HttpHandler from "../handler/http.handler.js";
 
 const router = Router();
+
+const ctrl = new ClienteController(repo);
+const handler = new HttpHandler(ctrl);
 
 router.get("/", handler.getBy.bind(handler));
 router.get("/:id", handler.get.bind(handler));
