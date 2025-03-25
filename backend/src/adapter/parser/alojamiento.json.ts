@@ -1,4 +1,4 @@
-import { Alojamiento, AlojamientoJson } from "../domain/entities/alojamiento.js";
+import { Alojamiento, AlojamientoJson } from "../../domain/entities/alojamiento.js";
 
 export const alojamientoToAlojamientoJson = (alojamiento: Alojamiento): AlojamientoJson => {
   const { precioPorNoche, aireAcondicionado, ...restAlojamiento } = alojamiento;

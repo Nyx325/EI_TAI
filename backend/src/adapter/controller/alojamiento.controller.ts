@@ -1,19 +1,19 @@
 import { z } from "zod";
 import HttpController from "./http.controller.js";
-import Repository from "../application/repository.js";
-import Search from "../domain/value_objects/search.js";
-import JsonResponse from "../domain/exceptions/json.response.js";
-import { SearchMode } from "../domain/value_objects/string.criteria.js";
-import { alojamientoToAlojamientoJson } from "./alojamiento.json.js";
+import Repository from "../../application/repository.js";
+import Search from "../../domain/value_objects/search.js";
+import JsonResponse from "../../domain/exceptions/json.response.js";
+import { SearchMode } from "../../domain/value_objects/string.criteria.js";
+import { alojamientoToAlojamientoJson } from "../parser/alojamiento.json.js";
 import {
   NewAlojamiento,
   Alojamiento,
   AlojamientoCriteria,
   AlojamientoJson,
   AlojamientoCriteriaQuery,
-} from "../domain/entities/alojamiento.js";
-import { intService } from "../domain/services/int.service.js";
-import { handleZodError } from "./zod.handler.js";
+} from "../../domain/entities/alojamiento.js";
+import { intService } from "../../domain/services/int.service.js";
+import { handleZodError } from "../handler/zod.handler.js";
 
 // Esquemas Zod para validación
 const NewAlojamientoSchema = z.object({

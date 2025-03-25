@@ -1,11 +1,8 @@
 import { prisma } from "../config.js";
 import Repository from "../application/repository.js";
 import Search from "../domain/value_objects/search.js";
-import searchableStringToPrisma from "../adapter/searchable.string.js";
+import searchableStringToPrisma from "../adapter/parser/searchable.string.js";
 import { PAGE_SIZE } from "../config.js";
-import HttpHandler from "../adapter/http.handler.js";
-import AlojamientoController from "../adapter/alojamiento.controller.js";
-
 import {
   Alojamiento,
   NewAlojamiento,
@@ -15,7 +12,7 @@ import {
 import {
   convertAlojamientoToPrisma,
   convertPrismaToAlojamiento,
-} from "../adapter/alojamiento.prisma.adapter.js";
+} from "../adapter/parser/alojamiento.prisma.adapter.js";
 
 export const alojamientoPrismaRepository: Repository<
   Alojamiento,
@@ -74,6 +71,3 @@ export const alojamientoPrismaRepository: Repository<
     };
   },
 };
-
-const controller = new AlojamientoController(alojamientoPrismaRepository);
-export const alojamientoPrismaHandler = new HttpHandler(controller);

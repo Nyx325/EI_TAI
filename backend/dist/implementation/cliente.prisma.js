@@ -1,5 +1,5 @@
 import { prisma } from "../config.js";
-import searchableStringToPrisma from "../adapter/searchable.string.js";
+import searchableStringToPrisma from "../adapter/parser/searchable.string.js";
 import { PAGE_SIZE } from "../config.js";
 export const clientePrismaRepository = {
     add(data) {

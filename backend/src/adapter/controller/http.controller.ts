@@ -1,8 +1,8 @@
-import Search from "../domain/value_objects/search.js";
-import Repository from "../application/repository.js";
+import Search from "../../domain/value_objects/search.js";
+import Repository from "../../application/repository.js";
 import { z } from "zod";
-import { handleZodError } from "./zod.handler.js";
-import JsonResponse from "../domain/exceptions/json.response.js";
+import { handleZodError } from "../handler/zod.handler.js";
+import JsonResponse from "../../domain/exceptions/json.response.js";
 
 /**
  * Clase abstracta que actúa como controlador HTTP para la persistencia de datos.

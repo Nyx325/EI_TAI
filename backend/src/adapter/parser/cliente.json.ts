@@ -1,4 +1,4 @@
-import {Cliente, ClienteJson} from "../domain/entities/cliente.js";
+import {Cliente, ClienteJson} from "../../domain/entities/cliente.js";
 
 export const clienteToJson = (c: Cliente): ClienteJson => {
   const {

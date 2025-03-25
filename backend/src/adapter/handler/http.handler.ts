@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import HttpController from "./http.controller.js";
-import JsonResponse from "../domain/exceptions/json.response.js";
+import HttpController from "../controller/http.controller.js";
+import JsonResponse from "../../domain/exceptions/json.response.js";
 
 /**
  * Clase genérica para el manejo de peticiones HTTP utilizando un controlador.

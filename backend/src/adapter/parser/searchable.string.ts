@@ -1,7 +1,7 @@
 import {
   SearchableString,
   SearchMode,
-} from "../domain/value_objects/string.criteria.js";
+} from "../../domain/value_objects/string.criteria.js";
 
 /**
  * Tipo que define un filtro de cadena para Prisma.
