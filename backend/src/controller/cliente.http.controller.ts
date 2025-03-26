@@ -34,6 +34,24 @@ export default class ClienteController extends HttpController<
     super(repo);
   }
 
+  protected modelToJson(data: Cliente): unknown {
+    const {
+      apellidoP,
+      apellidoM,
+      fechaCreacion,
+      fechaNacimiento,
+      ...restData
+    } = data;
+
+    return {
+      ...restData,
+      apellido_paterno: apellidoP,
+      apellido_materno: apellidoM,
+      fecha_creacion: fechaCreacion,
+      fecha_nacimiento: fechaNacimiento,
+    };
+  }
+
   public async add(data: unknown): Promise<Result<unknown, JsonError[]>> {
     const result = await this.newSchema.safeParseAsync(data);
 
@@ -86,40 +104,16 @@ export default class ClienteController extends HttpController<
     return new Ok(newRecord);
   }
 
-  public async get(
-    id?: unknown,
-  ): Promise<Result<unknown | undefined | null, JsonError[]>> {
-    console.log(`Tipo: ${typeof id}`);
-    console.log(`Valor: ${id}`);
-
-    const result = this.intIdSchema.safeParse({ id });
-    if (!result.success) {
-      return new Err(extractErrors(result.error));
-    }
-
-    const record = await this.repo.get(result.data.id);
-    return new Ok(record);
-  }
-
-  public async delete(id?: unknown): Promise<Result<unknown, JsonError[]>> {
-    const result = await this.intExistsSchema.safeParseAsync({ id });
-    if (!result.success) {
-      return new Err(extractErrors(result.error));
-    }
-
-    const deleted = await this.repo.delete(result.data.id);
-    return new Ok(deleted);
-  }
-
   public async getBy(
     criteria: unknown,
   ): Promise<Result<Search<unknown, unknown>, JsonError[]>> {
-    const result = this.criteriaSchema.safeParse(criteria);
-    if (!result.success) {
-      return new Err(extractErrors(result.error));
+    const validation = this.criteriaSchema.safeParse(criteria);
+    if (!validation.success) {
+      return new Err(extractErrors(validation.error));
     }
 
-    const { page, nombres, email, apellidoP, apellidoM, ...c } = result.data;
+    const { page, nombres, email, apellidoP, apellidoM, ...c } =
+      validation.data;
     const search = await this.repo.getBy(
       {
         nombres: nombres
@@ -150,7 +144,13 @@ export default class ClienteController extends HttpController<
       },
       page,
     );
-    return new Ok(search);
+
+    const { result, ...s } = search;
+
+    return new Ok({
+      ...s,
+      result: result.map(this.modelToJson),
+    });
   }
 
   /** VALIDATION ZOD SCHEMAS */

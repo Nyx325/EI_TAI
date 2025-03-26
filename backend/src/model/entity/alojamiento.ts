@@ -1,4 +1,4 @@
-import { SearchableString } from "../value_objects/string.criteria.js";
+import { SearchableString } from "../value_object/searchable.string.js";
 
 /**
  * Interfaz que define la estructura para crear un nuevo alojamiento.

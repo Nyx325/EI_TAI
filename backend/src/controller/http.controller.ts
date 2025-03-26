@@ -1,8 +1,9 @@
-import { Result } from "neverthrow";
+import { Err, Ok, Result } from "neverthrow";
 import JsonError from "../model/value_object/json.error.js";
 import Repository from "../model/repository/repository.js";
 import Search from "../model/value_object/search.js";
 import { z } from "zod";
+import { extractErrors } from "../model/parsers/zod.parser.js";
 
 export default abstract class HttpController<M, NM, I, C> {
   protected repo;
@@ -11,20 +12,40 @@ export default abstract class HttpController<M, NM, I, C> {
     this.repo = repo;
   }
 
-  public abstract add(data: unknown): Promise<Result<unknown, JsonError[]>>;
-
-  public abstract update(data: unknown): Promise<Result<unknown, JsonError[]>>;
-
-  public abstract get(
-    id?: unknown,
-  ): Promise<Result<unknown | undefined | null, JsonError[]>>;
-
-  public abstract delete(id?: unknown): Promise<Result<unknown, JsonError[]>>;
-
   public abstract getBy(
     criteria: unknown,
   ): Promise<Result<Search<unknown, unknown>, JsonError[]>>;
 
+  public async get(
+    id?: unknown,
+  ): Promise<Result<unknown | undefined | null, JsonError[]>> {
+    const result = this.intIdSchema.safeParse({ id });
+    if (!result.success) {
+      return new Err(extractErrors(result.error));
+    }
+
+    const record = await this.repo.get(result.data.id as I);
+    const response = record ? this.modelToJson(record) : undefined;
+    return new Ok(response);
+  }
+
+  public async delete(id?: unknown): Promise<Result<unknown, JsonError[]>> {
+    const result = await this.intExistsSchema.safeParseAsync({ id });
+    if (!result.success) {
+      return new Err(extractErrors(result.error));
+    }
+
+    const deleted = await this.repo.delete(result.data.id as I);
+    return new Ok(this.modelToJson(deleted));
+  }
+
+  public abstract add(data: unknown): Promise<Result<unknown, JsonError[]>>;
+
+  public abstract update(data: unknown): Promise<Result<unknown, JsonError[]>>;
+
+  protected abstract modelToJson(data: M): unknown;
+
+  /** ZOD VALIDATION SCHEMAS */
   protected intIdSchema = z.object({
     id: z.coerce
       .number()
