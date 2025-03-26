@@ -9,7 +9,9 @@
     "start:backend": "cd backend && npm start",
     "start:frontend": "cd frontend && npm start",
     "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd frontend && npm run dev"
+    "dev:frontend": "cd frontend && npm run dev",
+    "migrate-dev": "cd backend && npm run migrate-dev",
+    "migrate-deploy": "cd backend && npm run migrate-deploy"
   },
   "workspaces": [
     "backend",

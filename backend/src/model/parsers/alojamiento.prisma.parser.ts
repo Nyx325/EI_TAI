@@ -5,50 +5,35 @@ import { Decimal } from "@prisma/client/runtime/library";
 export function toAlojamiento(
   prismaAlojamiento: PrismaAlojamiento,
 ): Alojamiento {
+
+  const {precioPorNoche, latitud, longitud, ...restA} = prismaAlojamiento;
+
   return {
-    id: prismaAlojamiento.id,
-    descripcion: prismaAlojamiento.descripcion,
-    banios: prismaAlojamiento.banios,
-    alberca: prismaAlojamiento.alberca,
-    cocina: prismaAlojamiento.cocina,
-    wifi: prismaAlojamiento.wifi,
-    television: prismaAlojamiento.television,
-    aireAcondicionado: prismaAlojamiento.aireAcondicionado,
-    precioPorNoche: prismaAlojamiento.precioPorNoche.toNumber(),
-    latitud: prismaAlojamiento.latitud.toNumber(),
-    longitud: prismaAlojamiento.longitud.toNumber(),
+    precioPorNoche: precioPorNoche.toNumber(),
+    latitud: latitud.toNumber(),
+    longitud: longitud.toNumber(),
+    ...restA
   };
 }
 
 export function fromAlojamiento(alojamiento: Alojamiento): PrismaAlojamiento {
+  const {precioPorNoche, latitud, longitud, ...restA} = alojamiento;
   return {
-    id: alojamiento.id,
-    descripcion: alojamiento.descripcion,
-    banios: alojamiento.banios,
-    alberca: alojamiento.alberca,
-    cocina: alojamiento.cocina,
-    wifi: alojamiento.wifi,
-    television: alojamiento.television,
-    aireAcondicionado: alojamiento.aireAcondicionado,
-    precioPorNoche: new Decimal(alojamiento.precioPorNoche),
-    latitud: new Decimal(alojamiento.latitud),
-    longitud: new Decimal(alojamiento.longitud),
+    precioPorNoche: new Decimal(precioPorNoche),
+    latitud: new Decimal(latitud),
+    longitud: new Decimal(longitud),
+    ...restA
   };
 }
 
 export function fromNewAlojamiento(
   alojamiento: NewAlojamiento,
 ): Omit<PrismaAlojamiento, "id"> {
+  const {precioPorNoche, latitud, longitud, ...restA} = alojamiento;
   return {
-    descripcion: alojamiento.descripcion,
-    banios: alojamiento.banios,
-    alberca: alojamiento.alberca,
-    cocina: alojamiento.cocina,
-    wifi: alojamiento.wifi,
-    television: alojamiento.television,
-    aireAcondicionado: alojamiento.aireAcondicionado,
-    precioPorNoche: new Decimal(alojamiento.precioPorNoche),
-    latitud: new Decimal(alojamiento.latitud),
-    longitud: new Decimal(alojamiento.longitud),
+    precioPorNoche: new Decimal(precioPorNoche),
+    latitud: new Decimal(latitud),
+    longitud: new Decimal(longitud),
+    ...restA
   };
 }

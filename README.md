@@ -23,8 +23,10 @@ Ejecutar el proyecto
 
 ```bash
 # Para producción
+npm run migrate-deploy
 npm run start
 # Para desarrollo
+npm run migrate-dev
 npm run dev
 ```
 
