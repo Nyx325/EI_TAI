@@ -32,6 +32,8 @@ npm run dev
 
 ## TODO
 
-- [ ] Corregir validacion de zod dentro del controlador en los controladores
+- [x] Corregir validacion de zod dentro del controlador en los controladores
       existentes
-- [ ] Corregir script de migracion cada que se ejecuta `dev`
+- [x] Corregir script de migracion cada que se ejecuta `dev`
+- [ ] Corregir caso se omite el apellido materno en el atualizar y no se convierte
+     a `null`

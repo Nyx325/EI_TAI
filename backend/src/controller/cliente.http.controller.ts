@@ -12,6 +12,7 @@ import {
   ClienteNuevo,
 } from "../model/entity/cliente.js";
 import Search from "../model/value_object/search.js";
+import { clienteToJson } from "../model/parsers/cliente.parser.js";
 
 const nombreSimpleRegex =
   /^(?!.*\s\s)[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:[ -][A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*$/;
@@ -32,24 +33,7 @@ export default class ClienteController extends HttpController<
     repo: Repository<Cliente, ClienteNuevo, number, ClienteCriteria>,
   ) {
     super(repo);
-  }
-
-  protected modelToJson(data: Cliente): unknown {
-    const {
-      apellidoP,
-      apellidoM,
-      fechaCreacion,
-      fechaNacimiento,
-      ...restData
-    } = data;
-
-    return {
-      ...restData,
-      apellido_paterno: apellidoP,
-      apellido_materno: apellidoM,
-      fecha_creacion: fechaCreacion,
-      fecha_nacimiento: fechaNacimiento,
-    };
+    this.parseJson = clienteToJson;
   }
 
   public async add(data: unknown): Promise<Result<unknown, JsonError[]>> {
@@ -74,7 +58,7 @@ export default class ClienteController extends HttpController<
       ...restData,
     });
 
-    return new Ok(newRecord);
+    return new Ok(this.parseJson(newRecord));
   }
 
   public async update(data: unknown): Promise<Result<unknown, JsonError[]>> {
@@ -101,7 +85,7 @@ export default class ClienteController extends HttpController<
       ...restData,
     });
 
-    return new Ok(newRecord);
+    return new Ok(this.parseJson(newRecord));
   }
 
   public async getBy(
@@ -149,7 +133,7 @@ export default class ClienteController extends HttpController<
 
     return new Ok({
       ...s,
-      result: result.map(this.modelToJson),
+      result: result.map(this.parseJson),
     });
   }
 

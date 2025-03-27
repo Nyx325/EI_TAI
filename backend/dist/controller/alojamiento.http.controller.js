@@ -3,17 +3,11 @@ import { Err, Ok } from "neverthrow";
 import HttpController from "./http.controller.js";
 import { z } from "zod";
 import { extractErrors } from "../model/parsers/zod.parser.js";
+import { alojamientoToJson } from "../model/parsers/alojamiento.parser.js";
 export default class AlojamientoController extends HttpController {
     constructor(repo) {
         super(repo);
-    }
-    modelToJson(data) {
-        const { precioPorNoche, aireAcondicionado, ...restData } = data;
-        return {
-            ...restData,
-            precio_por_noche: precioPorNoche,
-            aire_acondicionado: aireAcondicionado,
-        };
+        this.parseJson = alojamientoToJson;
     }
     async add(data) {
         const result = this.newSchema.safeParse(data);
@@ -26,7 +20,7 @@ export default class AlojamientoController extends HttpController {
             precioPorNoche: precio_por_noche,
             ...restData,
         });
-        return new Ok(this.modelToJson(newRecord));
+        return new Ok(this.parseJson(newRecord));
     }
     async update(data) {
         const result = await this.updateSchema.safeParseAsync(data);
@@ -39,7 +33,7 @@ export default class AlojamientoController extends HttpController {
             precioPorNoche: precio_por_noche,
             ...restData,
         });
-        return new Ok(this.modelToJson(updated));
+        return new Ok(this.parseJson(updated));
     }
     async getBy(criteria) {
         const validation = this.criteriaSchema.safeParse(criteria);
@@ -59,7 +53,7 @@ export default class AlojamientoController extends HttpController {
         const { result, ...s } = search;
         return new Ok({
             ...s,
-            result: result.map(this.modelToJson),
+            result: result.map(this.parseJson),
         });
     }
     /** VALIDATION ZOD SCHEMAS */

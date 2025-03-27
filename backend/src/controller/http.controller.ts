@@ -7,6 +7,7 @@ import { extractErrors } from "../model/parsers/zod.parser.js";
 
 export default abstract class HttpController<M, NM, I, C> {
   protected repo;
+  protected parseJson: (m: M) => unknown = (m) => m;
 
   constructor(repo: Repository<M, NM, I, C>) {
     this.repo = repo;
@@ -25,7 +26,7 @@ export default abstract class HttpController<M, NM, I, C> {
     }
 
     const record = await this.repo.get(result.data.id as I);
-    const response = record ? this.modelToJson(record) : undefined;
+    const response = record ? this.parseJson(record) : undefined;
     return new Ok(response);
   }
 
@@ -36,14 +37,12 @@ export default abstract class HttpController<M, NM, I, C> {
     }
 
     const deleted = await this.repo.delete(result.data.id as I);
-    return new Ok(this.modelToJson(deleted));
+    return new Ok(this.parseJson(deleted));
   }
 
   public abstract add(data: unknown): Promise<Result<unknown, JsonError[]>>;
 
   public abstract update(data: unknown): Promise<Result<unknown, JsonError[]>>;
-
-  protected abstract modelToJson(data: M): unknown;
 
   /** ZOD VALIDATION SCHEMAS */
   protected intIdSchema = z.object({

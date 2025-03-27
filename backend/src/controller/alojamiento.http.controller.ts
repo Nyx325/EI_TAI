@@ -11,6 +11,7 @@ import {
   NewAlojamiento,
   AlojamientoCriteria,
 } from "../model/entity/alojamiento.js";
+import { alojamientoToJson } from "../model/parsers/alojamiento.parser.js";
 
 export default class AlojamientoController extends HttpController<
   Alojamiento,
@@ -22,16 +23,7 @@ export default class AlojamientoController extends HttpController<
     repo: Repository<Alojamiento, NewAlojamiento, number, AlojamientoCriteria>,
   ) {
     super(repo);
-  }
-
-  protected modelToJson(data: Alojamiento): unknown {
-    const { precioPorNoche, aireAcondicionado, ...restData } = data;
-
-    return {
-      ...restData,
-      precio_por_noche: precioPorNoche,
-      aire_acondicionado: aireAcondicionado,
-    };
+    this.parseJson = alojamientoToJson;
   }
 
   public async add(data: unknown): Promise<Result<unknown, JsonError[]>> {
@@ -48,7 +40,7 @@ export default class AlojamientoController extends HttpController<
       ...restData,
     });
 
-    return new Ok(this.modelToJson(newRecord));
+    return new Ok(this.parseJson(newRecord));
   }
 
   public async update(data: unknown): Promise<Result<unknown, JsonError[]>> {
@@ -65,7 +57,7 @@ export default class AlojamientoController extends HttpController<
       ...restData,
     });
 
-    return new Ok(this.modelToJson(updated));
+    return new Ok(this.parseJson(updated));
   }
 
   public async getBy(
@@ -93,7 +85,7 @@ export default class AlojamientoController extends HttpController<
     const { result, ...s } = search;
     return new Ok({
       ...s,
-      result: result.map(this.modelToJson),
+      result: result.map(this.parseJson),
     });
   }
 

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { extractErrors } from "../model/parsers/zod.parser.js";
 export default class HttpController {
     repo;
+    parseJson = (m) => m;
     constructor(repo) {
         this.repo = repo;
     }
@@ -12,7 +13,7 @@ export default class HttpController {
             return new Err(extractErrors(result.error));
         }
         const record = await this.repo.get(result.data.id);
-        const response = record ? this.modelToJson(record) : undefined;
+        const response = record ? this.parseJson(record) : undefined;
         return new Ok(response);
     }
     async delete(id) {
@@ -21,7 +22,7 @@ export default class HttpController {
             return new Err(extractErrors(result.error));
         }
         const deleted = await this.repo.delete(result.data.id);
-        return new Ok(this.modelToJson(deleted));
+        return new Ok(this.parseJson(deleted));
     }
     /** ZOD VALIDATION SCHEMAS */
     intIdSchema = z.object({

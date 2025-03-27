@@ -4,6 +4,7 @@ import { MIN_AGE } from "../config.js";
 import { extractErrors } from "../model/parsers/zod.parser.js";
 import { SearchMode } from "../model/value_object/searchable.string.js";
 import { Err, Ok } from "neverthrow";
+import { clienteToJson } from "../model/parsers/cliente.parser.js";
 const nombreSimpleRegex = /^(?!.*\s\s)[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:[ -][A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*$/;
 const nombreCompuestoRegex = /^(?!.*\s{2})(?!.*[0-9_!"#$%&'()*+,./:;<=>?@[\\\]^{|}~])[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:[ -](?:(?:(?:del|de la|de los|de las|de|las|los|y|a|e)[ -])?[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+))+$/;
 const pwdRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&._])[A-Za-z\d@$!%*?&._]{8,}$/;
@@ -12,16 +13,7 @@ const localDateRegex = /^\d{4}-\d{2}-\d{2}$/;
 export default class ClienteController extends HttpController {
     constructor(repo) {
         super(repo);
-    }
-    modelToJson(data) {
-        const { apellidoP, apellidoM, fechaCreacion, fechaNacimiento, ...restData } = data;
-        return {
-            ...restData,
-            apellido_paterno: apellidoP,
-            apellido_materno: apellidoM,
-            fecha_creacion: fechaCreacion,
-            fecha_nacimiento: fechaNacimiento,
-        };
+        this.parseJson = clienteToJson;
     }
     async add(data) {
         const result = await this.newSchema.safeParseAsync(data);
@@ -36,7 +28,7 @@ export default class ClienteController extends HttpController {
             fechaNacimiento: fecha_nacimiento,
             ...restData,
         });
-        return new Ok(newRecord);
+        return new Ok(this.parseJson(newRecord));
     }
     async update(data) {
         const result = await this.updateSchema.safeParseAsync(data);
@@ -52,7 +44,7 @@ export default class ClienteController extends HttpController {
             fechaCreacion: fecha_creacion,
             ...restData,
         });
-        return new Ok(newRecord);
+        return new Ok(this.parseJson(newRecord));
     }
     async getBy(criteria) {
         const validation = this.criteriaSchema.safeParse(criteria);
@@ -90,7 +82,7 @@ export default class ClienteController extends HttpController {
         const { result, ...s } = search;
         return new Ok({
             ...s,
-            result: result.map(this.modelToJson),
+            result: result.map(this.parseJson),
         });
     }
     /** VALIDATION ZOD SCHEMAS */
