@@ -23,7 +23,7 @@ model Cliente {
 
 model Tarjeta {
   id            Int    @id @default(autoincrement())
-  numeroTarjeta String @map("numero_tarjeta") @db.VarChar(50)inicio: z.coerce.date().refine((date) => !isNaN(date.getTime())),
+  numeroTarjeta String @map("numero_tarjeta") @db.VarChar(50)
   clienteId     Int    @map("cliente_id")
 
   Cliente Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
