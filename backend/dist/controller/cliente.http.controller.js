@@ -5,6 +5,7 @@ import { extractErrors } from "../model/parsers/zod.parser.js";
 import { SearchMode } from "../model/value_object/searchable.string.js";
 import { Err, Ok } from "neverthrow";
 import { clienteToJson } from "../model/parsers/cliente.parser.js";
+import { hashPassword } from "./auth.controller.js";
 const nombreSimpleRegex = /^(?!.*\s\s)[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:[ -][A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*$/;
 const nombreCompuestoRegex = /^(?!.*\s{2})(?!.*[0-9_!"#$%&'()*+,./:;<=>?@[\\\]^{|}~])[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:[ -](?:(?:(?:del|de la|de los|de las|de|las|los|y|a|e)[ -])?[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+))+$/;
 const pwdRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&._])[A-Za-z\d@$!%*?&._]{8,}$/;
@@ -21,11 +22,12 @@ export default class ClienteController extends HttpController {
             const errors = extractErrors(result.error);
             return new Err(errors);
         }
-        const { apellido_paterno, apellido_materno, fecha_nacimiento, ...restData } = result.data;
+        const { apellido_paterno, apellido_materno, fecha_nacimiento, password, ...restData } = result.data;
         const newRecord = await this.repo.add({
             apellidoP: apellido_paterno,
             apellidoM: apellido_materno,
             fechaNacimiento: fecha_nacimiento,
+            password: await hashPassword(password),
             ...restData,
         });
         return new Ok(this.parseJson(newRecord));
@@ -36,12 +38,14 @@ export default class ClienteController extends HttpController {
             const errors = extractErrors(result.error);
             return new Err(errors);
         }
-        const { apellido_paterno, apellido_materno, fecha_nacimiento, fecha_creacion, ...restData } = result.data;
+        const c = (await this.repo.get(result.data.id));
+        const { apellido_paterno, apellido_materno, fecha_nacimiento, password, ...restData } = result.data;
         const newRecord = await this.repo.update({
             apellidoP: apellido_paterno,
             apellidoM: apellido_materno,
             fechaNacimiento: fecha_nacimiento,
-            fechaCreacion: fecha_creacion,
+            fechaCreacion: c.fechaCreacion,
+            password: password ? await hashPassword(password) : c.password,
             ...restData,
         });
         return new Ok(this.parseJson(newRecord));
@@ -161,25 +165,16 @@ export default class ClienteController extends HttpController {
             .string()
             .min(1, "El email es obligatorio.")
             .email("El formato del email es inválido. Ejemplo válido: usuario@dominio.com."),
-        fecha_creacion: z.preprocess((arg) => {
-            if (typeof arg === "string") {
-                // Si la cadena coincide con alguno de los formatos, se retorna el Date correspondiente.
-                if (isoUTCRegex.test(arg) || localDateRegex.test(arg)) {
-                    return new Date(arg);
-                }
-                // En caso contrario, retornamos un Date inválido.
-                return new Date("");
-            }
-            // Si ya es un Date o un número, lo retornamos tal cual.
-            return arg;
-        }, 
-        // Se valida que el valor sea un Date válido y se transforma para comparar solo la parte de la fecha.
-        z
-            .date()
-            .refine((date) => !isNaN(date.getTime()), {
-            message: "La fecha debe estar en formato local (YYYY-MM-DD) o UTC (ISO 8601). Ejemplos válidos: 2025-03-24 o 2025-03-24T12:34:56.789Z",
-        })
-            .transform((date) => new Date(date.getFullYear(), date.getMonth(), date.getDate()))),
+        password: z
+            .string()
+            .regex(pwdRegex, [
+            "Mínimo 8 caracteres",
+            "Al menos una mayúscula",
+            "Al menos una minúscula",
+            "Al menos un número",
+            "Al menos un carácter especial (@$!%*?&._)",
+        ].join(", "))
+            .optional(),
     })
         // Combina el esquema de datos con el esquema del ID
         .merge(this.intExistsSchema)

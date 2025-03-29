@@ -2,6 +2,7 @@ import { Cliente } from "../entity/cliente.js";
 
 export function clienteToJson(data: Cliente): unknown {
   const {
+    password,
     apellidoP,
     apellidoM,
     fechaCreacion,
@@ -13,7 +14,6 @@ export function clienteToJson(data: Cliente): unknown {
     ...restData,
     apellido_paterno: apellidoP,
     apellido_materno: apellidoM,
-    fecha_creacion: fechaCreacion,
     fecha_nacimiento: fechaNacimiento,
   };
 }
