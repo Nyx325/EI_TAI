@@ -5,10 +5,10 @@
  */
 export enum SearchMode {
   /** Búsqueda exacta (coincidencia total de la cadena). */
-  EQUALS,
+  EQUALS = "equals",
 
   /** Búsqueda parcial (contiene la cadena de búsqueda). */
-  LIKE,
+  LIKE = "like",
 }
 
 /**

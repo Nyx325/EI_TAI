@@ -6,9 +6,9 @@
 export var SearchMode;
 (function (SearchMode) {
     /** Búsqueda exacta (coincidencia total de la cadena). */
-    SearchMode[SearchMode["EQUALS"] = 0] = "EQUALS";
+    SearchMode["EQUALS"] = "equals";
     /** Búsqueda parcial (contiene la cadena de búsqueda). */
-    SearchMode[SearchMode["LIKE"] = 1] = "LIKE";
+    SearchMode["LIKE"] = "like";
 })(SearchMode || (SearchMode = {}));
 /**
  * Representa una cadena de búsqueda con un modo específico.

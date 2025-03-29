@@ -161,11 +161,11 @@ export default class HttpHandler<M, NM, I, C> {
     try {
       const result = await this.ctrl.getBy(req.query);
       result.match(
-        (resultados) => {
-          if (resultados.result.length !== 0) {
+        (search) => {
+          if (search.result.length !== 0) {
             res.status(200).json({
               message: "Busqueda realizada con éxito",
-              resultados,
+              search,
             });
           } else {
             res.status(404).json({
