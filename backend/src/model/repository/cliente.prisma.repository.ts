@@ -2,6 +2,11 @@ import Repository from "./repository.js";
 import { Cliente, ClienteNuevo, ClienteCriteria } from "../entity/cliente.js";
 import { PAGE_SIZE, prisma } from "../../config.js";
 import searchableStringToPrisma from "../parsers/searchable.string.js";
+import {
+  fromCliente,
+  fromTipoCliente,
+  toCliente,
+} from "../parsers/cliente.prisma.parser.js";
 
 export const clientePrismaRepository: Repository<
   Cliente,
@@ -9,23 +14,35 @@ export const clientePrismaRepository: Repository<
   number,
   ClienteCriteria
 > = {
-  add(data) {
-    return prisma.cliente.create({ data });
-  },
-
-  update(data) {
-    return prisma.cliente.update({
-      where: { id: data.id },
-      data,
+  async add(data) {
+    const { tipo, ...restD } = data;
+    const c = await prisma.cliente.create({
+      data: {
+        ...restD,
+        tipo: tipo ? fromTipoCliente(tipo) : undefined,
+      },
     });
+
+    return toCliente(c);
   },
 
-  delete(id) {
-    return prisma.cliente.delete({ where: { id } });
+  async update(data) {
+    const c = await prisma.cliente.update({
+      where: { id: data.id },
+      data: fromCliente(data),
+    });
+
+    return toCliente(c);
   },
 
-  get(id) {
-    return prisma.cliente.findUnique({ where: { id } });
+  async delete(id) {
+    const c = await prisma.cliente.delete({ where: { id } });
+    return toCliente(c);
+  },
+
+  async get(id) {
+    const c = await prisma.cliente.findUnique({ where: { id } });
+    return c ? toCliente(c) : null;
   },
 
   async getBy(criteria, page) {
@@ -52,7 +69,7 @@ export const clientePrismaRepository: Repository<
       totalPages: Math.ceil(totalResults / PAGE_SIZE),
       currentPage: page,
       criteria,
-      result,
+      result: result.map(toCliente),
     };
   },
 };

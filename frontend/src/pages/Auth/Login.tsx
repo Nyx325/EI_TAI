@@ -22,6 +22,7 @@ interface UserResponse {
   id: string;
   nombres: string;
   email: string;
+  tipo: number;
   apellido_paterno: string;
   apellido_materno: string;
   fecha_nacimiento: string;
@@ -29,7 +30,7 @@ interface UserResponse {
 
 const Login: React.FC = () => {
   const { status, login } = useUser();
-  const {setAppState} = useAppContext();
+  const { setAppState } = useAppContext();
 
   useEffect(() => {
     if (status === USER_STATUS.LOGGED_IN) {
@@ -81,6 +82,7 @@ const Login: React.FC = () => {
   const handleLoginSuccess = (userData: UserResponse) => {
     const {
       id,
+      tipo,
       apellido_paterno,
       apellido_materno,
       fecha_nacimiento,
@@ -90,6 +92,7 @@ const Login: React.FC = () => {
     login({
       ...restUser,
       id: Number(id),
+      tipo: Number(tipo),
       apellidoP: apellido_paterno,
       apellidoM: apellido_materno,
       fechaNacimiento: new Date(fecha_nacimiento),

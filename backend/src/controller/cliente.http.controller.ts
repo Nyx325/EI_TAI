@@ -248,6 +248,13 @@ export default class ClienteController extends HttpController<
           "Al menos un carácter especial (@$!%*?&._)",
         ].join(", "),
       ),
+    tipo: z.coerce
+      .number()
+      .int("Debe ser un valor entre 0 y 1")
+      .min(0, "Debe ser un valor entre 0 y 1")
+      .max(1, "Debe ser un valor entre 0 y 1")
+      .optional()
+      .default(0),
   });
 
   protected updateSchema = this.newSchema
