@@ -1,23 +1,37 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home/Home";
-import Layout from "./components/layout/Layout";
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
 import { UserProvider } from "./context/UserContext";
 import Login from "./pages/Auth/Login";
+import { AppProvider, useAppContext } from "./context/AppContext";
+
+export enum AppState {
+  HOME = "home",
+  LOGIN = "login",
+}
+
+const renderView = {
+  [AppState.HOME]: <Home />,
+  [AppState.LOGIN]: <Login />,
+};
+
+const AppContent: React.FC = () => {
+  const { appState } = useAppContext();
+  return (
+    <UserProvider>
+      <Header />
+      {renderView[appState]}
+      <Footer />
+    </UserProvider>
+  );
+};
 
 function App() {
   return (
-    <UserProvider>
-      <Router>
-        <Routes>
-          {/* Rutas que comparten el layout */}
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="login" element={<Login />} />
-          </Route>
-        </Routes>
-      </Router>
-    </UserProvider>
+    <AppProvider>
+      <AppContent />
+    </AppProvider>
   );
 }
 

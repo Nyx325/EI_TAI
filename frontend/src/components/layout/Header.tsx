@@ -1,10 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { USER_STATUS, useUser } from "../../context/UserContext";
-import "./Header.css"; // Importa los estilos
+import { AppState } from "../../App";
+import "./Header.css";
+import { useAppContext } from "../../context/AppContext";
+
 
 const Header: React.FC = () => {
   const { user, status, logout } = useUser();
+  const {setAppState} = useAppContext();
 
   return (
     <header className="header">
@@ -23,9 +26,12 @@ const Header: React.FC = () => {
             </button>
           </div>
         ) : (
-          <Link to="/login" className="link">
-            <button className="button">Iniciar sesión</button>
-          </Link>
+          <button
+            onClick={() => setAppState(AppState.LOGIN)}
+            className="button"
+          >
+            Iniciar sesión
+          </button>
         )}
       </section>
     </header>

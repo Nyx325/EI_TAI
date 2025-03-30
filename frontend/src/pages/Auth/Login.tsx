@@ -1,11 +1,11 @@
 // src/pages/Login.tsx
 import React, { useState, useCallback, useEffect } from "react";
 import { USER_STATUS, useUser } from "../../context/UserContext";
-import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../config";
 import JsonError from "../../models/value_objects/json.error";
 import Alert, { AlertType } from "../../components/common/Alert";
 import "./Login.css"; // Importación de los estilos
+import { AppState, useAppContext } from "../../context/AppContext";
 
 enum LoginState {
   IDLE = "idle",
@@ -29,13 +29,13 @@ interface UserResponse {
 
 const Login: React.FC = () => {
   const { status, login } = useUser();
-  const navigate = useNavigate();
+  const {setAppState} = useAppContext();
 
   useEffect(() => {
     if (status === USER_STATUS.LOGGED_IN) {
-      navigate("/");
+      setAppState(AppState.HOME);
     }
-  }, [status, navigate]);
+  }, [status]);
 
   const [loginState, setLoginState] = useState(LoginState.IDLE);
   const [credentials, setCredentials] = useState({
@@ -95,7 +95,7 @@ const Login: React.FC = () => {
       fechaNacimiento: new Date(fecha_nacimiento),
     });
 
-    navigate("/");
+    setAppState(AppState.HOME);
   };
 
   const handleSubmit = useCallback(
@@ -127,7 +127,7 @@ const Login: React.FC = () => {
         setLoginState(LoginState.IDLE);
       }
     },
-    [credentials, login, navigate],
+    [credentials, login],
   );
 
   return (
