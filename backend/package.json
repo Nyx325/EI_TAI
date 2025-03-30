@@ -1,5 +1,5 @@
 {
-  "name": "ei_tai",
+  "name": "ei_tai_backend",
   "version": "1.0.0",
   "description": "",
   "main": "dist/server.js",

@@ -1,6 +1,7 @@
 {
-  "name": "frontend",
+  "name": "ei_tai_frontend",
   "version": "0.1.0",
+  "type":"module",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
