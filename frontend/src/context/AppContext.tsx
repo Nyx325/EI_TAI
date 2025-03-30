@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState } from "react";
 export enum AppState {
   HOME = "home",
   LOGIN = "login",
+  REGISTER = "register",
 }
 
 interface AppContextProps {
@@ -12,7 +13,9 @@ interface AppContextProps {
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
 
-export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [appState, setAppState] = useState<AppState>(AppState.HOME);
 
   return (

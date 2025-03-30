@@ -4,16 +4,13 @@ import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import { UserProvider } from "./context/UserContext";
 import Login from "./pages/Auth/Login";
-import { AppProvider, useAppContext } from "./context/AppContext";
-
-export enum AppState {
-  HOME = "home",
-  LOGIN = "login",
-}
+import Register from "./pages/Auth/Register";
+import { AppProvider, useAppContext, AppState } from "./context/AppContext";
 
 const renderView = {
   [AppState.HOME]: <Home />,
   [AppState.LOGIN]: <Login />,
+  [AppState.REGISTER]: <Register />,
 };
 
 const AppContent: React.FC = () => {

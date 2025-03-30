@@ -1,3 +1,10 @@
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer; /* Indica que es clickeable */
+  /* Puedes agregar otros estilos que desees */
+}
+
 .login-container {
   display: flex;
   flex-direction: column;
@@ -91,6 +98,41 @@
   border-top-color: white;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+}
+
+/* Clase base para botones */
+.button {
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 0.5rem;
+}
+
+/* Botón primario: fondo color (por ejemplo, azul) y texto blanco */
+.button--primary {
+  background-color: black;
+  color: white;
+  border: none;
+}
+
+.button--primary:hover {
+  background-color: #0873c4;
+}
+
+/* Botón con contorno: fondo blanco, borde y texto negro */
+.button--outline {
+  background-color: white;
+  color: #000;
+  border: 2px solid #ccc;
+}
+
+.button--outline:hover {
+  background-color: #0873c4;
+  border-color: #0873c4;
+  color: white;
 }
 
 @keyframes spin {
