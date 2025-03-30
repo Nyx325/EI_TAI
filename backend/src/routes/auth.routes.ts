@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { AuthController } from "../controller/auth.controller.js";
 import { clientePrismaRepository as repo } from "../model/repository/cliente.prisma.repository.js";
+import { clienteToJson } from "../model/parsers/cliente.parser.js";
 
 const router = Router();
 
@@ -11,7 +12,7 @@ router.post("/login", async (req, res) => {
     const result = await ctrl.login(req.body);
     result.match(
       (client) => {
-        res.status(200).json(client);
+        res.status(200).json(clienteToJson(client));
       },
       (errors) => {
         res.status(401).json({

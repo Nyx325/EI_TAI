@@ -22,15 +22,27 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [status, setStatus] = useState<USER_STATUS>(USER_STATUS.GUEST);
+  const [user, setUser] = useState<User | null>(() => {
+    // Recuperar usuario del localStorage al inicializar
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  const [status, setStatus] = useState<USER_STATUS>(() => {
+    // Estado inicial basado en localStorage
+    return localStorage.getItem("user")
+      ? USER_STATUS.LOGGED_IN
+      : USER_STATUS.GUEST;
+  });
 
   const login = (userData: User) => {
+    localStorage.setItem("user", JSON.stringify(userData)); // Guardar en localStorage
     setUser(userData);
     setStatus(USER_STATUS.LOGGED_IN);
   };
 
   const logout = () => {
+    localStorage.removeItem("user"); // Eliminar del localStorage
     setUser(null);
     setStatus(USER_STATUS.GUEST);
   };

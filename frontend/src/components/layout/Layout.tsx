@@ -7,7 +7,9 @@ const Layout: React.FC = () => {
   return (
     <div>
       <Header />
-      <Outlet />
+      <div className="content-wrapper">
+        <Outlet />
+      </div>
       <Footer />
     </div>
   );

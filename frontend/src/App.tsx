@@ -1,10 +1,9 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./views/Home";
-import OtraPagina from "./views/OtraPagina";
-import Layout from "./components/Layout";
-import { UserProvider } from "./components/UserContext";
-import Login from "./views/Login";
+import Home from "./pages/Home/Home";
+import Layout from "./components/layout/Layout";
+import { UserProvider } from "./context/UserContext";
+import Login from "./pages/Auth/Login";
 
 function App() {
   return (
@@ -14,7 +13,6 @@ function App() {
           {/* Rutas que comparten el layout */}
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="apartado" element={<OtraPagina />} />
             <Route path="login" element={<Login />} />
           </Route>
         </Routes>

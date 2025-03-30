@@ -2,7 +2,7 @@ import React from "react";
 
 export enum AlertType {
   SUCCESS = "success",
-  ERROR = "error",
+  DANGER = "error",
   WARNING = "warning",
   INFO = "info",
 }
@@ -15,13 +15,14 @@ interface AlertProps {
 const Alert: React.FC<AlertProps> = ({ message, type = AlertType.WARNING }) => {
   const colors = {
     [AlertType.SUCCESS]: "green",
-    [AlertType.ERROR]: "red",
+    [AlertType.DANGER]: "red",
     [AlertType.WARNING]: "orange",
     [AlertType.INFO]: "blue",
   };
 
   return (
     <div
+      className="alert"
       style={{
         padding: "10px",
         borderRadius: "5px",
