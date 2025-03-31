@@ -35,6 +35,22 @@ model Tarjeta {
   Cliente Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
 }
 
+model Estado {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique @db.VarChar(100)
+
+  Ciudades Ciudad[]
+}
+
+model Ciudad {
+  id       Int    @id @default(autoincrement())
+  nombre   String @unique @db.VarChar(100)
+  estadoId Int?   @map("estado_id")
+
+  Estado       Estado?       @relation(fields: [estadoId], references: [id])
+  Alojamientos Alojamiento[]
+}
+
 model Alojamiento {
   id                Int     @id @default(autoincrement())
   descripcion       String  @db.Text
@@ -47,9 +63,11 @@ model Alojamiento {
   precioPorNoche    Decimal @map("precio_por_noche") @db.Decimal(10, 2)
   latitud           Decimal @db.Decimal(9, 6)
   longitud          Decimal @db.Decimal(9, 6)
+  ciudadId          Int?
 
   imagenes Imagen[]
   reservas Reserva[]
+  Ciudad   Ciudad?   @relation(fields: [ciudadId], references: [id])
 }
 
 model Imagen {

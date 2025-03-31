@@ -7,14 +7,14 @@ export function fromReserva(r) {
         total: new Decimal(total),
         Cliente: Cliente ? fromCliente(Cliente) : undefined,
         Alojamiento: Alojamiento ? fromAlojamiento(Alojamiento) : undefined,
-        ...restR
+        ...restR,
     };
 }
 export function fromNewReserva(nr) {
     const { total, ...restR } = nr;
     return {
         total: new Decimal(total),
-        ...restR
+        ...restR,
     };
 }
 export function toReserva(pr) {
@@ -23,6 +23,6 @@ export function toReserva(pr) {
         total: total.toNumber(),
         Cliente: Cliente ? toCliente(Cliente) : undefined,
         Alojamiento: Alojamiento ? toAlojamiento(Alojamiento) : undefined,
-        ...restPR
+        ...restPR,
     };
 }

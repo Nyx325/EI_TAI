@@ -26,6 +26,7 @@ export interface NewAlojamiento {
   latitud: number;
   /** Longitud geográfica. */
   longitud: number;
+  ciudadId: number;
 }
 
 /**
@@ -56,6 +57,7 @@ export interface Alojamiento {
   latitud: number;
   /** Longitud geográfica. */
   longitud: number;
+  ciudadId?: number;
 }
 
 /**
@@ -84,6 +86,7 @@ export interface AlojamientoCriteria {
   latitud?: number;
   /** Filtrado por longitud geográfica (opcional). */
   longitud?: number;
+  ciudadId?: number;
 }
 
 /**

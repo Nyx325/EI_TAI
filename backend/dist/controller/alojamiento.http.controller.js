@@ -5,19 +5,72 @@ import { z } from "zod";
 import { extractErrors } from "../model/parsers/zod.parser.js";
 import { alojamientoToJson } from "../model/parsers/alojamiento.parser.js";
 export default class AlojamientoController extends HttpController {
-    constructor(repo) {
+    repoCiudad;
+    repoEstado;
+    constructor(repo, repoCiudad, repoEstado) {
         super(repo);
         this.parseJson = alojamientoToJson;
+        this.repoCiudad = repoCiudad;
+        this.repoEstado = repoEstado;
+    }
+    async validateAddress(longitud, latitud) {
+        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitud}&lon=${longitud}&accept-language=es`);
+        const data = await response.json();
+        console.log(response);
+        console.log(data);
+        if (!response.ok) {
+            throw new Error("Error al obtener datos del alojamiento en nominatim.openstreetmap.org");
+        }
+        if (data.error) {
+            return new Err([
+                { field: "latitud, longitud", message: "Localización inválida" },
+            ]);
+        }
+        const busquedaEstado = await this.repoEstado.getBy({
+            nombre: {
+                mode: SearchMode.LIKE,
+                str: `${data.address.state}`,
+            },
+        }, 1);
+        if (busquedaEstado.result.length === 0) {
+            const nuevoEstado = await this.repoEstado.add({
+                nombre: `${data.address.state}`,
+            });
+            const nuevaCiudad = await this.repoCiudad.add({
+                nombre: data.address.city,
+                estadoId: nuevoEstado.id,
+            });
+            return new Ok(nuevaCiudad.id);
+        }
+        const busquedaCiudad = await this.repoCiudad.getBy({
+            nombre: { mode: SearchMode.LIKE, str: `${data.address.city}` },
+        }, 1);
+        if (busquedaCiudad.result.length === 0) {
+            const nuevaCiudad = await this.repoCiudad.add({
+                nombre: data.address.city,
+                estadoId: busquedaEstado.result[0].id,
+            });
+            return new Ok(nuevaCiudad.id);
+        }
+        return new Ok(busquedaCiudad.result[0].id);
     }
     async add(data) {
         const result = this.newSchema.safeParse(data);
         if (!result.success) {
             return new Err(extractErrors(result.error));
         }
-        const { precio_por_noche, aire_acondicionado, ...restData } = result.data;
+        const { precio_por_noche, aire_acondicionado, latitud, longitud, ...restData } = result.data;
+        const validation = await this.validateAddress(longitud, latitud);
+        if (validation.isErr()) {
+            return new Err(validation.error);
+        }
+        const ciudadId = validation.value;
         const newRecord = await this.repo.add({
             aireAcondicionado: aire_acondicionado,
             precioPorNoche: precio_por_noche,
+            latitud,
+            longitud,
+            ciudadId,
             ...restData,
         });
         return new Ok(this.parseJson(newRecord));
@@ -27,10 +80,18 @@ export default class AlojamientoController extends HttpController {
         if (!result.success) {
             return new Err(extractErrors(result.error));
         }
-        const { precio_por_noche, aire_acondicionado, ...restData } = result.data;
+        const { precio_por_noche, aire_acondicionado, latitud, longitud, ...restData } = result.data;
+        const validation = await this.validateAddress(longitud, latitud);
+        if (validation.isErr()) {
+            return new Err(validation.error);
+        }
+        const ciudadId = validation.value;
         const updated = await this.repo.update({
             aireAcondicionado: aire_acondicionado,
             precioPorNoche: precio_por_noche,
+            longitud,
+            latitud,
+            ciudadId,
             ...restData,
         });
         return new Ok(this.parseJson(updated));
