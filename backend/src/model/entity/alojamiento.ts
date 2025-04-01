@@ -57,6 +57,7 @@ export interface Alojamiento {
   latitud: number;
   /** Longitud geográfica. */
   longitud: number;
+
   ciudadId?: number;
 }
 
@@ -108,6 +109,7 @@ export interface AlojamientoJson {
   precio_por_noche?: unknown;
   latitud?: unknown;
   longitud?: unknown;
+  ciudad_id?: unknown;
 }
 
 /**
@@ -130,4 +132,5 @@ export interface AlojamientoCriteriaQuery {
   longitud?: unknown;
   /** Parámetro opcional para la paginación. */
   page?: unknown;
+  ciiudad_id?: unknown;
 }

@@ -5,7 +5,7 @@ export function toAlojamiento(prismaAlojamiento) {
         precioPorNoche: precioPorNoche.toNumber(),
         latitud: latitud.toNumber(),
         longitud: longitud.toNumber(),
-        ciudadId: ciudadId ?? undefined,
+        ciudadId: ciudadId ? ciudadId : undefined,
         ...restA,
     };
 }
@@ -15,7 +15,7 @@ export function fromAlojamiento(alojamiento) {
         precioPorNoche: new Decimal(precioPorNoche),
         latitud: new Decimal(latitud),
         longitud: new Decimal(longitud),
-        ciudadId: ciudadId ?? null,
+        ciudadId: ciudadId ? ciudadId : null,
         ...restA,
     };
 }

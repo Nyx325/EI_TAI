@@ -1,11 +1,13 @@
 import { Alojamiento } from "../entity/alojamiento.js";
 
 export function alojamientoToJson(data: Alojamiento): unknown {
-  const { precioPorNoche, aireAcondicionado, ...restData } = data;
+  const { precioPorNoche, aireAcondicionado, ciudadId, ...restData } = data;
 
-  return {
+  const a = {
     ...restData,
     precio_por_noche: precioPorNoche,
     aire_acondicionado: aireAcondicionado,
+    ciudad_id: ciudadId,
   };
+  return a;
 }

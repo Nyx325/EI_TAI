@@ -44,8 +44,6 @@ export default class AlojamientoController extends HttpController<
     );
 
     const data = await response.json();
-    console.log(response);
-    console.log(data);
 
     if (!response.ok) {
       throw new Error(
@@ -62,7 +60,7 @@ export default class AlojamientoController extends HttpController<
     const busquedaEstado = await this.repoEstado.getBy(
       {
         nombre: {
-          mode: SearchMode.LIKE,
+          mode: SearchMode.EQUALS,
           str: `${data.address.state}`,
         },
       },
@@ -84,7 +82,7 @@ export default class AlojamientoController extends HttpController<
 
     const busquedaCiudad = await this.repoCiudad.getBy(
       {
-        nombre: { mode: SearchMode.LIKE, str: `${data.address.city}` },
+        nombre: { mode: SearchMode.EQUALS, str: `${data.address.city}` },
       },
       1,
     );
@@ -178,6 +176,7 @@ export default class AlojamientoController extends HttpController<
     }
 
     const { page, descripcion, ...c } = validation.data;
+    console.log(c);
     const search = await this.repo.getBy(
       {
         descripcion: descripcion
@@ -270,5 +269,6 @@ export default class AlojamientoController extends HttpController<
       .positive("Página debe ser positiva")
       .optional()
       .default(1),
+    ciudadId: z.coerce.number().int().positive().optional(),
   });
 }
