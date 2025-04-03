@@ -73,13 +73,8 @@ const Register: React.FC = () => {
   const processApiErrors = (errors: JsonError[]) => {
     const newErrors: RegisterErrors = { ...defaultRegErr };
 
-    console.log(validFields);
     errors.forEach(({ field, message }) => {
       const errorMessage = stringifyMessage(message);
-      console.log(field);
-      console.log(
-        `validFields.includes(${field}: ${validFields.includes(`${field}`)}`,
-      );
       if (validFields.includes(`${field}`)) {
         newErrors[field as keyof RegisterErrors] = errorMessage;
       } else {

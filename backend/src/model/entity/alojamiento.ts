@@ -1,63 +1,31 @@
 import { SearchableString } from "../value_object/searchable.string.js";
 
-/**
- * Interfaz que define la estructura para crear un nuevo alojamiento.
- *
- * @interface NewAlojamiento
- */
 export interface NewAlojamiento {
-  /** Descripción del alojamiento. */
   descripcion: string;
-  /** Número de baños. */
   banios: number;
-  /** Indica si cuenta con alberca. */
   alberca: boolean;
-  /** Indica si cuenta con cocina. */
   cocina: boolean;
-  /** Indica si cuenta con wifi. */
   wifi: boolean;
-  /** Indica si cuenta con televisión. */
   television: boolean;
-  /** Indica si cuenta con aire acondicionado. */
   aireAcondicionado: boolean;
-  /** Precio por noche. */
   precioPorNoche: number;
-  /** Latitud geográfica. */
   latitud: number;
-  /** Longitud geográfica. */
   longitud: number;
   ciudadId: number;
 }
 
-/**
- * Interfaz que define la estructura de un alojamiento persistido.
- *
- * @interface Alojamiento
- */
 export interface Alojamiento {
-  /** Identificador único del alojamiento. */
   id: number;
-  /** Descripción del alojamiento. */
   descripcion: string;
-  /** Número de baños. */
   banios: number;
-  /** Indica si cuenta con alberca. */
   alberca: boolean;
-  /** Indica si cuenta con cocina. */
   cocina: boolean;
-  /** Indica si cuenta con wifi. */
   wifi: boolean;
-  /** Indica si cuenta con televisión. */
   television: boolean;
-  /** Indica si cuenta con aire acondicionado. */
   aireAcondicionado: boolean;
-  /** Precio por noche. */
   precioPorNoche: number;
-  /** Latitud geográfica. */
   latitud: number;
-  /** Longitud geográfica. */
   longitud: number;
-
   ciudadId?: number;
 }
 

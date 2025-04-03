@@ -1,14 +1,24 @@
-import { Alojamiento } from "./alojamiento.js";
-import { User } from "./user.js";
-
 export interface Reserva {
   id: number;
   inicio: Date;
   fin: Date;
   total: number;
-  clienteId: number;
-  alojamientoId: number;
+  cliente_id: number;
+  alojamiento_id: number;
+}
 
-  User?: User;
-  Alojamiento?: Alojamiento;
+export interface NewReserva {
+  inicio: Date;
+  fin: Date;
+  total: number;
+  cliente_id: number;
+  alojamiento_id: number;
+}
+
+export interface ReservaCriteria {
+  inicio?: Date;
+  fin?: Date;
+  total?: number;
+  clienteId?: number;
+  alojamientoId?: number;
 }

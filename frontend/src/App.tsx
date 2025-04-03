@@ -6,6 +6,7 @@ import { UserProvider } from "./context/UserContext";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import { AppProvider, useAppContext, AppState } from "./context/AppContext";
+import SearchBar from "./components/layout/SearchBar";
 
 const renderView = {
   [AppState.HOME]: <Home />,
@@ -18,6 +19,7 @@ const AppContent: React.FC = () => {
   return (
     <UserProvider>
       <Header />
+      <SearchBar />
       {renderView[appState]}
       <Footer />
     </UserProvider>
