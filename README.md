@@ -6,9 +6,7 @@ Instalar dependencias de node en el directorio raíz del proyecto
 
 ```bash
 # Para producción
-npm install --omit=dev
-# Para desarrollo
-npm install
+npm run install-all
 ```
 
 Crear un archivo `.env` en el directorio `backend/`
@@ -17,6 +15,12 @@ Crear un archivo `.env` en el directorio `backend/`
 DATABASE_URL="mysql://user:password@host:3306/db_name"
 PORT=3000
 PAGE_SIZE=15
+```
+
+Crear un archivo `.env` en el directorio `frontend`
+
+```
+REACT_APP_API_URL="http://localhost:3001"
 ```
 
 Ejecutar el proyecto
@@ -29,11 +33,3 @@ npm run start
 npm run migrate-dev
 npm run dev
 ```
-
-## TODO
-
-- [x] Corregir validacion de zod dentro del controlador en los controladores
-      existentes
-- [x] Corregir script de migracion cada que se ejecuta `dev`
-- [ ] Corregir caso se omite el apellido materno en el atualizar y no se convierte
-     a `null`
