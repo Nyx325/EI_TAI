@@ -1,7 +1,10 @@
 import { Result, Ok, Err } from "ts-results";
+import { API_URL } from "../config";
 import { objectToQueryString } from "../handlers/http.handler";
 import {
   ApiErrorResponse,
+  ApiErrorType,
+  ApiRecordResponse,
   ApiRecordsResponse,
 } from "../models/value_objects/api.responses";
 import Search from "../models/value_objects/search";
@@ -21,36 +24,70 @@ export interface Controller<M, NM, C, I> extends Seeker<M, C, I> {
 }
 
 // http-controller-factory.ts
-interface ControllerFactoryConfig<T, C, K> {
+export interface ControllerFactoryConfig<T, C, K> {
   endpoint: string;
+}
+
+export async function handleErrorResponse(
+  response: Response,
+): Promise<Result<null, ApiErrorResponse>> {
+  if (response.status >= 400 && response.status < 500) {
+    let parsed = {} as { message: string; errors?: any[] };
+    try {
+      // Verificamos si el response tiene contenido
+      const text = await response.text();
+      parsed = text ? JSON.parse(text) : { message: "Error del cliente" };
+    } catch (error) {
+      parsed = { message: "Error al parsear respuesta del cliente" };
+    }
+    return Err({
+      type: ApiErrorType.BadRequest,
+      message: parsed.message,
+      errors: parsed.errors || [],
+    });
+  } else if (response.status >= 500) {
+    return Err({
+      type: ApiErrorType.Internal,
+      message: "Internal server error",
+      errors: [],
+    });
+  }
+
+  return Ok(null);
+}
+
+export async function handleResponse<T>(
+  response: Response,
+): Promise<Result<T, ApiErrorResponse>> {
+  const validation = await handleErrorResponse(response);
+  if (validation.err) return validation;
+
+  const { registro } = (await response.json()) as ApiRecordResponse<T>;
+  return Ok(registro);
+}
+
+export async function handleOptionalRecordResponse<T>(
+  response: Response,
+): Promise<Result<T | null, ApiErrorResponse>> {
+  if (response.status === 404) return Ok(null);
+  return handleResponse(response);
 }
 
 export function createHttpController<T, NewT, CriteriaT, IdT>(
   config: ControllerFactoryConfig<T, CriteriaT, IdT>,
 ): Controller<T, NewT, CriteriaT, IdT> {
-  const { endpoint } = config;
+  const endpoint = `${API_URL}/${config.endpoint}`;
 
-  async function handleResponse(response: Response): Promise<Result<T | null>> {
+  async function handleSearchResponse(
+    response: Response,
+  ): Promise<Result<Search<T, CriteriaT> | null, ApiErrorResponse>> {
     if (response.status === 404) return Ok(null);
 
     const validation = await handleErrorResponse(response);
     if (validation.err) return validation;
 
-    const { registro } = (await response.json()) as ApiRecordResponse<T>;
-    return Ok(registro);
-  }
-
-  async function handleSearchResponse(
-    response: Response,
-  ): Promise<Result<SearchResult<T>>> {
-    const validation = await handleErrorResponse(response);
-    if (validation.err) return validation;
-
-    const { search } = (await response.json()) as ApiRecordsResponse<
-      T,
-      CriteriaT
-    >;
-    return Ok(search);
+    const data = await response.json();
+    return Ok(data.search);
   }
 
   return {
@@ -60,7 +97,7 @@ export function createHttpController<T, NewT, CriteriaT, IdT>(
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      return handleResponse(response);
+      return handleResponse<T>(response);
     },
 
     async update(data: T) {
@@ -83,7 +120,7 @@ export function createHttpController<T, NewT, CriteriaT, IdT>(
       const response = await fetch(`${endpoint}/${id}`, {
         method: "GET",
       });
-      return handleResponse(response);
+      return handleOptionalRecordResponse(response);
     },
 
     async getBy(criteria: CriteriaT, page: number) {
@@ -100,23 +137,3 @@ export function createHttpController<T, NewT, CriteriaT, IdT>(
     },
   };
 }
-
-// Uso para Alojamiento
-export const alojamientoHttpController = createHttpController<
-  Alojamiento,
-  NewAlojamiento,
-  AlojamientoCriteria,
-  number
->({
-  endpoint: `${API_URL}/alojamiento`,
-});
-
-// Uso para Cliente
-export const clienteHttpController = createHttpController<
-  Cliente,
-  ClienteNuevo,
-  ClienteCriteria,
-  number
->({
-  endpoint: `${API_URL}/cliente`,
-});

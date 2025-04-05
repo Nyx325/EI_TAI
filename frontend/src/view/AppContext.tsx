@@ -1,9 +1,24 @@
 import React, { createContext, useContext, useState } from "react";
+import { Cliente } from "../models/entities/cliente";
 
-export enum AppState {
-  HOME = "home",
-  LOGIN = "login",
-  REGISTER = "register",
+export enum AppView {
+  Idle = "idle",
+  Login = "login",
+  Searching = "searching",
+  AlojamientoSelected = "alojamientoSelected",
+  Paying = "paying",
+}
+
+export interface SearchInput {
+  ciudad?: number;
+  llegada: string;
+  salida: string;
+}
+
+export interface AppState {
+  view: AppView;
+  cliente?: Cliente;
+  input: SearchInput;
 }
 
 interface AppContextProps {
@@ -16,7 +31,13 @@ const AppContext = createContext<AppContextProps | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [appState, setAppState] = useState<AppState>(AppState.HOME);
+  const [appState, setAppState] = useState<AppState>({
+    view: AppView.Idle,
+    input: {
+      llegada: "",
+      salida: "",
+    },
+  });
 
   return (
     <AppContext.Provider value={{ appState, setAppState }}>

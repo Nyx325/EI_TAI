@@ -1,37 +1,34 @@
 import "./App.css";
-import Home from "./pages/Home/Home";
-import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
-import { UserProvider } from "./context/UserContext";
-import Login from "./pages/Auth/Login";
-import Register from "./pages/Auth/Register";
-import { AppProvider, useAppContext, AppState } from "./context/AppContext";
-import SearchBar from "./components/layout/SearchBar";
+import { AppProvider, useAppContext, AppView } from "./view/AppContext";
+import Header from "./view/components/layout/Header";
+import SearchBar from "./view/components/layout/SearchBar";
+import Home from "./view/pages/Home/Home";
 
 const renderView = {
-  [AppState.HOME]: <Home />,
-  [AppState.LOGIN]: <Login />,
-  [AppState.REGISTER]: <Register />,
+  [AppView.Idle]: <Home />,
+  [AppView.Searching]: <h1>Searching</h1>,
+  [AppView.AlojamientoSelected]: <h1>Alojamiento Selected</h1>,
+  [AppView.Paying]: <h1>Paying</h1>,
+  [AppView.Login]: <h1>Login</h1>,
 };
 
 const AppContent: React.FC = () => {
   const { appState } = useAppContext();
   return (
-    <UserProvider>
+    <>
       <Header />
       <SearchBar />
-      {renderView[appState]}
-      <Footer />
-    </UserProvider>
+      <main>{renderView[appState.view]}</main>
+    </>
   );
 };
 
-function App() {
+const App: React.FC = () => {
   return (
     <AppProvider>
       <AppContent />
     </AppProvider>
   );
-}
+};
 
 export default App;

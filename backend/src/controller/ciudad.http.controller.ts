@@ -130,6 +130,7 @@ export default class CiudadController extends HttpController<
 
   protected searchCriteria = z.object({
     nombre: z.coerce.string().optional(),
+    estadoId: z.coerce.number().positive().optional(),
     page: z.coerce.number().int().positive().optional().default(1),
   });
 }

@@ -1,50 +1,48 @@
 import React from "react";
-import { USER_STATUS, useUser } from "../../context/UserContext";
+import { AppView, useAppContext } from "../../AppContext";
 import "./Header.css";
-import { useAppContext, AppState } from "../../context/AppContext";
 
 const Header: React.FC = () => {
-  const { user, status, logout } = useUser();
-  const { setAppState } = useAppContext();
+  const { appState, setAppState } = useAppContext();
+
+  const handleLogout = () => {
+    // Lógica para cerrar sesión
+    setAppState((prev) => ({ ...prev, cliente: undefined }));
+  };
+
+  const handleLogin = () => {
+    setAppState((prev) => ({ ...prev, view: AppView.Login }));
+  };
+
+  const handleMainPage = () => {
+    setAppState((prev) => ({ ...prev, view: AppView.Idle }));
+  };
 
   return (
-    <>
-      <header className="header">
-        <section className="logo-section">
-          <div className="logo" onClick={() => setAppState(AppState.HOME)}>
-            Rêverie
-          </div>
-        </section>
-
-        <section className="nav-section">
-          {status === USER_STATUS.LOGGED_IN && user ? (
-            <div className="user-container">
-              <span className="greeting">
-                Hola, {user.nombres} {user.apellidoP}
-              </span>
-              <button onClick={logout} className="button button--primary">
-                Cerrar sesión
-              </button>
-            </div>
-          ) : (
+    <header className="header">
+      <div className="container">
+        <h1 className="title clickable" onClick={handleMainPage}>
+          Rêverie
+        </h1>
+        <div className="actions">
+          {!appState.cliente ? (
             <>
-              <button
-                onClick={() => setAppState(AppState.LOGIN)}
-                className="button button--outline"
-              >
+              <button className="btn" onClick={handleLogin}>
                 Iniciar sesión
               </button>
-              <button
-                onClick={() => setAppState(AppState.REGISTER)}
-                className="button button--primary"
-              >
-                Registrarse
+              <button className="btn secondary">Registrarse</button>
+            </>
+          ) : (
+            <>
+              <span className="greeting">Hola {appState.cliente.nombres}</span>
+              <button className="btn" onClick={handleLogout}>
+                Cerrar sesión
               </button>
             </>
           )}
-        </section>
-      </header>
-    </>
+        </div>
+      </div>
+    </header>
   );
 };
 

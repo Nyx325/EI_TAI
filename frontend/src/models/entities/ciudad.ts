@@ -11,5 +11,5 @@ export interface NuevaCiudad {
 
 export interface CiudadCriteria {
   nombre?: string;
-  estado_id?: number;
+  estadoId?: number;
 }

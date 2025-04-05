@@ -1,7 +1,13 @@
 import FieldError from "./field.error";
 import Search from "./search";
 
+export enum ApiErrorType {
+  Internal = "Internal",
+  BadRequest = "BadRequest",
+}
+
 export type ApiErrorResponse = {
+  type: ApiErrorType;
   message: string;
   errors: FieldError[];
 };

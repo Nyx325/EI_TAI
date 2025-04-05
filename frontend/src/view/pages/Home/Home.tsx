@@ -5,10 +5,10 @@ import "./Home.css";
 
 const Home: React.FC = () => {
   return (
-    <main className="home">
+    <>
       <AboutSection />
       <TeamSection />
-    </main>
+    </>
   );
 };
 
