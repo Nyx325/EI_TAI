@@ -1,0 +1,157 @@
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer; /* Indica que es clickeable */
+  /* Puedes agregar otros estilos que desees */
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.login-container h2 {
+  color: #2d3436;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.login-container form {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  margin-right: 1.5rem;
+}
+
+.form-group .alert {
+  width: 102%;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #0984e3;
+  box-shadow: 0 0 0 3px rgba(9, 132, 227, 0.1);
+}
+
+.form-group input[aria-invalid="true"] {
+  border-color: #ff7675;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #0984e3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-container button:hover {
+  background-color: #0873c4;
+}
+
+.login-container button[disabled] {
+  background-color: #b2bec3;
+  cursor: not-allowed;
+}
+
+.login-container button[aria-busy="true"] {
+  position: relative;
+  color: transparent;
+}
+
+.login-container button[aria-busy="true"]::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Clase base para botones */
+.button {
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 0.5rem;
+}
+
+/* Botón primario: fondo color (por ejemplo, azul) y texto blanco */
+.button--primary {
+  background-color: black;
+  color: white;
+  border: none;
+}
+
+.button--primary:hover {
+  background-color: #0873c4;
+}
+
+/* Botón con contorno: fondo blanco, borde y texto negro */
+.button--outline {
+  background-color: white;
+  color: #000;
+  border: 2px solid #ccc;
+}
+
+.button--outline:hover {
+  background-color: #0873c4;
+  border-color: #0873c4;
+  color: white;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 1rem;
+  }
+
+  .login-container form {
+    padding: 1.5rem;
+  }
+
+  .login-container h2 {
+    font-size: 1.75rem;
+  }
+}

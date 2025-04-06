@@ -7,6 +7,7 @@ export enum AppView {
   Searching = "searching",
   AlojamientoSelected = "alojamientoSelected",
   Paying = "paying",
+  Registering = "registering",
 }
 
 export interface SearchInput {

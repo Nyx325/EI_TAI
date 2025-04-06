@@ -14,6 +14,10 @@ const Header: React.FC = () => {
     setAppState((prev) => ({ ...prev, view: AppView.Login }));
   };
 
+  const handleRegister = () => {
+    setAppState((prev) => ({ ...prev, view: AppView.Registering }));
+  };
+
   const handleMainPage = () => {
     setAppState((prev) => ({ ...prev, view: AppView.Idle }));
   };
@@ -30,7 +34,9 @@ const Header: React.FC = () => {
               <button className="btn" onClick={handleLogin}>
                 Iniciar sesión
               </button>
-              <button className="btn secondary">Registrarse</button>
+              <button className="btn secondary" onClick={handleRegister}>
+                Registrarse
+              </button>
             </>
           ) : (
             <>

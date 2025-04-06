@@ -10,9 +10,7 @@ export interface Cliente {
   apellido_materno: string | null | undefined;
   tipo: TipoCliente;
   email: string;
-  password: string;
   fecha_nacimiento: Date;
-  fechaCreacion: Date;
 }
 
 export interface ClienteNuevo {

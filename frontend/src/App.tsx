@@ -5,13 +5,16 @@ import SearchBar from "./view/components/layout/SearchBar";
 import Home from "./view/pages/Home/Home";
 import SearchingPage from "./view/pages/Search/SearchingPage";
 import AlojamientoView from "./view/pages/Alojamiento/AlojamientoView";
+import Login from "./view/pages/Auth/Login";
+import Register from "./view/pages/Auth/Register";
 
 const renderView = {
   [AppView.Idle]: <Home />,
   [AppView.Searching]: <SearchingPage />,
   [AppView.AlojamientoSelected]: <AlojamientoView />,
   [AppView.Paying]: <h1>Paying</h1>,
-  [AppView.Login]: <h1>Login</h1>,
+  [AppView.Login]: <Login />,
+  [AppView.Registering]: <Register />,
 };
 
 const AppContent: React.FC = () => {
