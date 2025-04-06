@@ -126,7 +126,7 @@ const Register: React.FC = () => {
 
   return (
     <div className="login-container">
-      <h2>Iniciar Sesión</h2>
+      <h2>Registrarse</h2>
 
       {errors.general && (
         <Alert
