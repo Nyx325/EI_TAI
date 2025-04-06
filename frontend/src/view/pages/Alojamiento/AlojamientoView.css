@@ -57,16 +57,45 @@
   font-size: 0.95rem;
 }
 
-/* Responsive */
+.reservar-button {
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.reservar-button:hover {
+  background-color: #1b5e20; /* 10% más oscuro */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.reservar-button:active {
+  background-color: #145028; /* 15% más oscuro */
+  transform: translateY(1px);
+}
+
 @media (max-width: 600px) {
   .alojamiento-header {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .alojamiento-title {
     font-size: 1.6rem;
   }
+
   .alojamiento-price {
     margin-top: 8px;
+  }
+
+  .reservar-button {
+    width: 100%;
+    margin-top: 12px;
+    order: 3;
   }
 }

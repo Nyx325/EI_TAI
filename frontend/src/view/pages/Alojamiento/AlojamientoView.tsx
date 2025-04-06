@@ -36,6 +36,7 @@ const AlojamientoView: React.FC = () => {
         <span className="alojamiento-price">
           ${alojamiento.precio_por_noche} / noche
         </span>
+        <button className="reservar-button">Reservar</button>
       </header>
 
       <section className="alojamiento-description">
