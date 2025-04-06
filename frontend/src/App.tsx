@@ -3,11 +3,13 @@ import { AppProvider, useAppContext, AppView } from "./view/AppContext";
 import Header from "./view/components/layout/Header";
 import SearchBar from "./view/components/layout/SearchBar";
 import Home from "./view/pages/Home/Home";
+import SearchingPage from "./view/pages/Search/SearchingPage";
+import AlojamientoView from "./view/pages/Alojamiento/AlojamientoView";
 
 const renderView = {
   [AppView.Idle]: <Home />,
-  [AppView.Searching]: <h1>Searching</h1>,
-  [AppView.AlojamientoSelected]: <h1>Alojamiento Selected</h1>,
+  [AppView.Searching]: <SearchingPage />,
+  [AppView.AlojamientoSelected]: <AlojamientoView />,
   [AppView.Paying]: <h1>Paying</h1>,
   [AppView.Login]: <h1>Login</h1>,
 };

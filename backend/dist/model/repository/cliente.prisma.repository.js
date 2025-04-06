@@ -41,6 +41,7 @@ export const clientePrismaRepository = {
                 where,
                 take: PAGE_SIZE,
                 skip: (page - 1) * PAGE_SIZE,
+                orderBy: { apellidoP: "asc" },
             }),
             prisma.cliente.count({ where }),
         ]);

@@ -14,8 +14,8 @@ export const reservaPrismaRepository: Repository<
       data,
       include: {
         Cliente: true,
-        Alojamiento: true
-      }
+        Alojamiento: true,
+      },
     });
 
     return toReserva(reserva);
@@ -23,14 +23,14 @@ export const reservaPrismaRepository: Repository<
 
   async update(d) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const {Cliente, Alojamiento, ...data} = d;
+    const { Cliente, Alojamiento, ...data } = d;
     const reserva = await prisma.reserva.update({
       where: { id: data.id },
       data,
       include: {
-        Cliente:true,
-        Alojamiento: true
-      }
+        Cliente: true,
+        Alojamiento: true,
+      },
     });
 
     return toReserva(reserva);
@@ -51,11 +51,12 @@ export const reservaPrismaRepository: Repository<
       prisma.reserva.findMany({
         where: criteria,
         include: {
-          Cliente:true,
-          Alojamiento: true
+          Cliente: true,
+          Alojamiento: true,
         },
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
+        orderBy: { id: "desc" },
       }),
       prisma.reserva.count({ where: criteria }),
     ]);

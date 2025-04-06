@@ -1,0 +1,54 @@
+/* Estilos base: la tarjeta ocupará el 100% del ancho de su contenedor */
+.alojamiento-card {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  width: 100%;
+  box-sizing: border-box; /* Para incluir el padding y border en el ancho */
+}
+
+.alojamiento-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para pantallas medianas y grandes */
+@media (min-width: 768px) {
+  .alojamiento-card {
+    padding: 24px;
+    /* Si deseas limitar el ancho en pantallas grandes, puedes usar:
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    */
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.descripcion {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.precio {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.amenidades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #555;
+}

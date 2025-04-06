@@ -53,6 +53,7 @@ model Ciudad {
 
 model Alojamiento {
   id                Int     @id @default(autoincrement())
+  titulo            String  @db.VarChar(20)
   descripcion       String  @db.Text
   banios            Int     @default(0)
   alberca           Boolean @default(false)

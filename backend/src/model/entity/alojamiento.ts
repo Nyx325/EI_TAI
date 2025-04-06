@@ -1,6 +1,7 @@
 import { SearchableString } from "../value_object/searchable.string.js";
 
 export interface NewAlojamiento {
+  titulo: string;
   descripcion: string;
   banios: number;
   alberca: boolean;
@@ -16,6 +17,7 @@ export interface NewAlojamiento {
 
 export interface Alojamiento {
   id: number;
+  titulo: string;
   descripcion: string;
   banios: number;
   alberca: boolean;
@@ -35,6 +37,7 @@ export interface Alojamiento {
  * @interface AlojamientoCriteria
  */
 export interface AlojamientoCriteria {
+  titulo?: SearchableString;
   /** Criterio de búsqueda para la descripción, utilizando un valor de tipo SearchableString. */
   descripcion?: SearchableString;
   /** Número de baños (opcional). */

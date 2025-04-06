@@ -46,10 +46,11 @@ export const alojamientoPrismaRepository: Repository<
   },
 
   async getBy(criteria, page) {
-    const { descripcion, ...restCriteria } = criteria;
+    const { titulo, descripcion, ...restCriteria } = criteria;
 
     const where = {
       ...restCriteria,
+      titulo: searchableStringToPrisma(titulo),
       descripcion: searchableStringToPrisma(descripcion),
     };
 
@@ -58,6 +59,7 @@ export const alojamientoPrismaRepository: Repository<
         where,
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
+        orderBy: { titulo: "asc" },
       }),
       prisma.alojamiento.count({ where }),
     ]);

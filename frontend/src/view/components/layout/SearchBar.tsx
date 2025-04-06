@@ -5,7 +5,6 @@ import { Ciudad } from "../../../models/entities/ciudad";
 import { Estado } from "../../../models/entities/estado";
 import { AppView, useAppContext } from "../../AppContext";
 import "./SearchBar.css";
-import Alert from "../common/Alert";
 
 type SelectData = {
   estados: Estado[];
@@ -14,7 +13,6 @@ type SelectData = {
 
 const SearchBar: React.FC = () => {
   const { appState, setAppState } = useAppContext();
-  const [errors, setErrors] = useState<string | undefined>(undefined);
   const [selectData, setSelectData] = useState<SelectData>({
     estados: [],
     ciudades: [],
@@ -30,6 +28,7 @@ const SearchBar: React.FC = () => {
     setAppState((prev) => ({
       ...prev,
       view: AppView.Searching,
+      searching: true,
     }));
   };
 

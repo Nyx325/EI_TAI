@@ -38,6 +38,7 @@ const ciudadPrismaRepository = {
                 where,
                 take: PAGE_SIZE,
                 skip: (page - 1) * PAGE_SIZE,
+                orderBy: { nombre: "asc" },
             }),
             prisma.ciudad.count({ where }),
         ]);

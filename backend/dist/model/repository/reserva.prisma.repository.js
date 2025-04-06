@@ -6,8 +6,8 @@ export const reservaPrismaRepository = {
             data,
             include: {
                 Cliente: true,
-                Alojamiento: true
-            }
+                Alojamiento: true,
+            },
         });
         return toReserva(reserva);
     },
@@ -19,8 +19,8 @@ export const reservaPrismaRepository = {
             data,
             include: {
                 Cliente: true,
-                Alojamiento: true
-            }
+                Alojamiento: true,
+            },
         });
         return toReserva(reserva);
     },
@@ -38,10 +38,11 @@ export const reservaPrismaRepository = {
                 where: criteria,
                 include: {
                     Cliente: true,
-                    Alojamiento: true
+                    Alojamiento: true,
                 },
                 take: PAGE_SIZE,
                 skip: (page - 1) * PAGE_SIZE,
+                orderBy: { id: "desc" },
             }),
             prisma.reserva.count({ where: criteria }),
         ]);

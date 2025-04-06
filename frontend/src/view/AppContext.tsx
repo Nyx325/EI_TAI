@@ -17,8 +17,10 @@ export interface SearchInput {
 
 export interface AppState {
   view: AppView;
-  cliente?: Cliente;
   input: SearchInput;
+  searching: boolean;
+  cliente?: Cliente;
+  selectedAlojamiento?: number;
 }
 
 interface AppContextProps {
@@ -37,6 +39,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       llegada: "",
       salida: "",
     },
+    searching: false,
   });
 
   return (

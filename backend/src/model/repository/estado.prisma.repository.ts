@@ -43,6 +43,7 @@ const estadoPrismaRepository: Repository<
         where,
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
+        orderBy: { nombre: "asc" },
       }),
       prisma.estado.count({ where }),
     ]);

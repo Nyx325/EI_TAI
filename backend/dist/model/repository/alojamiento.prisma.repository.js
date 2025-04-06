@@ -24,9 +24,10 @@ export const alojamientoPrismaRepository = {
         return record ? toAlojamiento(record) : undefined;
     },
     async getBy(criteria, page) {
-        const { descripcion, ...restCriteria } = criteria;
+        const { titulo, descripcion, ...restCriteria } = criteria;
         const where = {
             ...restCriteria,
+            titulo: searchableStringToPrisma(titulo),
             descripcion: searchableStringToPrisma(descripcion),
         };
         const [results, totalResults] = await prisma.$transaction([
@@ -34,6 +35,7 @@ export const alojamientoPrismaRepository = {
                 where,
                 take: PAGE_SIZE,
                 skip: (page - 1) * PAGE_SIZE,
+                orderBy: { titulo: "asc" },
             }),
             prisma.alojamiento.count({ where }),
         ]);

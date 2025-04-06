@@ -1,5 +1,6 @@
 export interface Alojamiento {
   id: number;
+  titulo: string;
   descripcion: string;
   banios: number;
   alberca: boolean;
@@ -13,6 +14,7 @@ export interface Alojamiento {
 }
 
 export interface NewAlojamiento {
+  titulo: string;
   descripcion: string;
   banios: number;
   alberca: boolean;
@@ -27,6 +29,7 @@ export interface NewAlojamiento {
 }
 
 export interface AlojamientoCriteria {
+  titulo?: string;
   descripcion?: string;
   banios?: number;
   alberca?: boolean;

@@ -175,10 +175,16 @@ export default class AlojamientoController extends HttpController<
       return new Err(extractErrors(validation.error));
     }
 
-    const { page, descripcion, ...c } = validation.data;
+    const { page, titulo, descripcion, ...c } = validation.data;
     console.log(c);
     const search = await this.repo.getBy(
       {
+        titulo: titulo
+          ? {
+              mode: SearchMode.LIKE,
+              str: titulo,
+            }
+          : undefined,
         descripcion: descripcion
           ? {
               mode: SearchMode.LIKE,
@@ -199,6 +205,10 @@ export default class AlojamientoController extends HttpController<
 
   /** VALIDATION ZOD SCHEMAS */
   protected newSchema = z.object({
+    titulo: z
+      .string({ required_error: "Ingrese un texto de máximo 20 caracteres" })
+      .min(3, "Requiere un mínimo de 3 caracteres")
+      .max(20, "Ingrese un texto de máximo 20 caracteres"),
     descripcion: z
       .string({ required_error: "Ingrese un breve texto sobre el alojamiento" })
       .min(1, "Ingrese un breve texto sobre el alojamiento"),
@@ -241,6 +251,11 @@ export default class AlojamientoController extends HttpController<
   protected updateSchema = this.newSchema.merge(this.intExistsSchema);
 
   protected criteriaSchema = z.object({
+    titulo: z
+      .string()
+      .min(3, "Requiere un mínimo de 3 caracteres")
+      .max(20, "Ingrese un texto de máximo 20 caracteres")
+      .optional(),
     descripcion: z.string().optional(),
     banios: z.coerce
       .number()
