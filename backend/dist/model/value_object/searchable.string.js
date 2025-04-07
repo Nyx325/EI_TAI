@@ -2,7 +2,7 @@ export var SearchMode;
 (function (SearchMode) {
     SearchMode["EQUALS"] = "equals";
     SearchMode["LIKE"] = "like";
-})(SearchMode || (SearchMode = {}));
+})(SearchMode = SearchMode || (SearchMode = {}));
 export class SearchableString {
     str;
     mode;
