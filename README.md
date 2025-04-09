@@ -35,5 +35,21 @@ npm run dev
 ```
 
 ```
-$2b$10$5OYXU1igxpaEFQPAkj6Btu9DBjGDyPXiyJk/Ksgz4BrHa19B89/cm 
+INSERT INTO Cliente (
+  nombres,
+  apellido_p,
+  tipo_cliente,
+  email,
+  password,
+  fecha_nacimiento,
+  fecha_creacion
+) VALUES (
+  'Ruben',
+  'Roman',
+  'ADMIN',
+  'admin@upemor.edu.mx',
+  '$2b$10$5OYXU1igxpaEFQPAkj6Btu9DBjGDyPXiyJk/Ksgz4BrHa19B89/cm',
+  '1990-01-01',
+  CURDATE()
+);
 ```

@@ -44,6 +44,7 @@ export default class AlojamientoController extends HttpController<
     );
 
     const data = await response.json();
+    console.log(data)
 
     if (!response.ok) {
       throw new Error(
@@ -73,7 +74,7 @@ export default class AlojamientoController extends HttpController<
       });
 
       const nuevaCiudad = await this.repoCiudad.add({
-        nombre: data.address.city,
+        nombre: data.address.city ?? data.address.town,
         estadoId: nuevoEstado.id,
       });
 
@@ -82,14 +83,14 @@ export default class AlojamientoController extends HttpController<
 
     const busquedaCiudad = await this.repoCiudad.getBy(
       {
-        nombre: { mode: SearchMode.EQUALS, str: `${data.address.city}` },
+        nombre: { mode: SearchMode.EQUALS, str: `${data.address.city ?? data.address.town}` },
       },
       1,
     );
 
     if (busquedaCiudad.result.length === 0) {
       const nuevaCiudad = await this.repoCiudad.add({
-        nombre: data.address.city,
+        nombre: data.address.city ?? data.address.town,
         estadoId: busquedaEstado.result[0].id,
       });
 

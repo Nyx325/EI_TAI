@@ -16,6 +16,7 @@ export default class AlojamientoController extends HttpController {
     async validateAddress(longitud, latitud) {
         const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitud}&lon=${longitud}&accept-language=es`);
         const data = await response.json();
+        console.log(data);
         if (!response.ok) {
             throw new Error("Error al obtener datos del alojamiento en nominatim.openstreetmap.org");
         }
@@ -35,17 +36,17 @@ export default class AlojamientoController extends HttpController {
                 nombre: `${data.address.state}`,
             });
             const nuevaCiudad = await this.repoCiudad.add({
-                nombre: data.address.city,
+                nombre: data.address.city ?? data.address.town,
                 estadoId: nuevoEstado.id,
             });
             return new Ok(nuevaCiudad.id);
         }
         const busquedaCiudad = await this.repoCiudad.getBy({
-            nombre: { mode: SearchMode.EQUALS, str: `${data.address.city}` },
+            nombre: { mode: SearchMode.EQUALS, str: `${data.address.city ?? data.address.town}` },
         }, 1);
         if (busquedaCiudad.result.length === 0) {
             const nuevaCiudad = await this.repoCiudad.add({
-                nombre: data.address.city,
+                nombre: data.address.city ?? data.address.town,
                 estadoId: busquedaEstado.result[0].id,
             });
             return new Ok(nuevaCiudad.id);
