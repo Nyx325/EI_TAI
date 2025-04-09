@@ -33,3 +33,7 @@ npm run start
 npm run migrate-dev
 npm run dev
 ```
+
+```
+$2b$10$5OYXU1igxpaEFQPAkj6Btu9DBjGDyPXiyJk/Ksgz4BrHa19B89/cm 
+```
