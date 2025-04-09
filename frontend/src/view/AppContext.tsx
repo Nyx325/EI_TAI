@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { Cliente } from "../models/entities/cliente";
 
 export enum AppView {
@@ -8,6 +8,7 @@ export enum AppView {
   AlojamientoSelected = "alojamientoSelected",
   Paying = "paying",
   Registering = "registering",
+  AdminAlojamiento = "adminAlojamiento",
 }
 
 export interface SearchInput {
@@ -34,14 +35,33 @@ const AppContext = createContext<AppContextProps | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [appState, setAppState] = useState<AppState>({
-    view: AppView.Idle,
-    input: {
-      llegada: "",
-      salida: "",
-    },
-    searching: false,
+  const [appState, setAppState] = useState<AppState>(() => {
+    const storedCliente = localStorage.getItem("cliente");
+    let cliente: Cliente | undefined;
+
+    if (storedCliente) {
+      const parsedCliente = JSON.parse(storedCliente);
+      cliente = {
+        ...parsedCliente,
+        fecha_nacimiento: new Date(parsedCliente.fecha_nacimiento),
+      };
+    }
+
+    return {
+      view: AppView.Idle,
+      input: { llegada: "", salida: "" },
+      searching: false,
+      cliente,
+    };
   });
+
+  useEffect(() => {
+    if (appState.cliente) {
+      localStorage.setItem("cliente", JSON.stringify(appState.cliente));
+    } else {
+      localStorage.removeItem("cliente");
+    }
+  }, [appState.cliente]);
 
   return (
     <AppContext.Provider value={{ appState, setAppState }}>

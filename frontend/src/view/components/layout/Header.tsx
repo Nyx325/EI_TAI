@@ -1,4 +1,5 @@
 import React from "react";
+import { TipoCliente } from "../../../models/entities/cliente";
 import { AppView, useAppContext } from "../../AppContext";
 import "./Header.css";
 
@@ -6,7 +7,6 @@ const Header: React.FC = () => {
   const { appState, setAppState } = useAppContext();
 
   const handleLogout = () => {
-    // Lógica para cerrar sesión
     setAppState((prev) => ({ ...prev, cliente: undefined }));
   };
 
@@ -20,6 +20,10 @@ const Header: React.FC = () => {
 
   const handleMainPage = () => {
     setAppState((prev) => ({ ...prev, view: AppView.Idle }));
+  };
+
+  const handlePanelAdmin = () => {
+    setAppState((prev) => ({ ...prev, view: AppView.AdminAlojamiento }));
   };
 
   return (
@@ -43,6 +47,13 @@ const Header: React.FC = () => {
               <span className="greeting">Hola {appState.cliente.nombres}</span>
               <button className="btn" onClick={handleLogout}>
                 Cerrar sesión
+              </button>
+            </>
+          )}
+          {appState.cliente && appState.cliente.tipo === TipoCliente.ADMIN && (
+            <>
+              <button className="btn" onClick={handlePanelAdmin}>
+                Administrar alojamientos
               </button>
             </>
           )}

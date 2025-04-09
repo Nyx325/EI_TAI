@@ -32,7 +32,7 @@ export async function handleErrorResponse(
   response: Response,
 ): Promise<Result<null, ApiErrorResponse>> {
   if (response.status >= 400 && response.status < 500) {
-    let parsed = {} as { message: string; errors?: any[] };
+    let parsed = {} as { message: string; errs?: any[] };
     try {
       // Verificamos si el response tiene contenido
       const text = await response.text();
@@ -43,7 +43,7 @@ export async function handleErrorResponse(
     return Err({
       type: ApiErrorType.BadRequest,
       message: parsed.message,
-      errors: parsed.errors || [],
+      errors: parsed.errs || [],
     });
   } else if (response.status >= 500) {
     return Err({

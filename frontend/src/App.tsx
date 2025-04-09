@@ -7,6 +7,7 @@ import SearchingPage from "./view/pages/Search/SearchingPage";
 import AlojamientoView from "./view/pages/Alojamiento/AlojamientoView";
 import Login from "./view/pages/Auth/Login";
 import Register from "./view/pages/Auth/Register";
+import RAlojamientos from "./view/pages/CrudAlojamientos/RAlojamientos";
 
 const renderView = {
   [AppView.Idle]: <Home />,
@@ -15,6 +16,7 @@ const renderView = {
   [AppView.Paying]: <h1>Paying</h1>,
   [AppView.Login]: <Login />,
   [AppView.Registering]: <Register />,
+  [AppView.AdminAlojamiento]: <RAlojamientos />,
 };
 
 const AppContent: React.FC = () => {

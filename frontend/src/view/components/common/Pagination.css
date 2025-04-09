@@ -1,0 +1,32 @@
+.pagination-container {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.pagination-nav,
+.pagination-item {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination-item.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination-nav:disabled,
+.pagination-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-ellipsis {
+  padding: 0.5rem 1rem;
+  user-select: none;
+}

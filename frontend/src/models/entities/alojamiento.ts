@@ -25,7 +25,6 @@ export interface NewAlojamiento {
   precio_por_noche: number;
   latitud: number;
   longitud: number;
-  ciudad_id: number;
 }
 
 export interface AlojamientoCriteria {

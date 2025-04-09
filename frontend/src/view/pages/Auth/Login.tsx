@@ -1,4 +1,3 @@
-// src/pages/Login.tsx
 import React, { useState, useCallback, useEffect } from "react";
 import { API_URL } from "../../../config";
 import Alert, { AlertType } from "../../components/common/Alert";
@@ -99,21 +98,15 @@ const Login: React.FC = () => {
       setLoginState(LoginState.LOGGIN_IN);
       setErrors({});
 
-      console.log("A");
       try {
-        console.log("B");
-        console.log(`${API_URL}/login`);
         const response = await fetch(`${API_URL}/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(credentials),
         });
-        console.log("C");
 
         const responseDataText = await response.text();
-        console.log(responseDataText);
         const responseData = JSON.parse(responseDataText);
-        console.log("D");
 
         if (!response.ok) {
           responseData.errors
